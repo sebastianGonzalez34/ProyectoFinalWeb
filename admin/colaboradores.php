@@ -1,6 +1,7 @@
 <?php
 require_once '../includes/config.php';
 require_once '../includes/database.php';
+require_once '../includes/sanitize.php';
 require_once '../includes/auth.php';
 
 $database = new Database();
@@ -10,18 +11,19 @@ $auth->redirectIfNotLogged('admin');
 
 // Paginación
 $records_per_page = 10;
-$page = isset($_GET['page']) ? $_GET['page'] : 1;
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$page = max(1, $page);
 $from_record_num = ($records_per_page * $page) - $records_per_page;
 
 // Búsqueda y filtros
-$search = isset($_GET['search']) ? Sanitize::cleanInput($_GET['search']) : '';
+$search = isset($_GET['search']) ? $_GET['search'] : '';
+$search = htmlspecialchars(trim($search), ENT_QUOTES, 'UTF-8');
 $where = '';
-$params = [];
+$search_term = '';
 
 if ($search) {
-    $where = "WHERE c.identificacion LIKE ? OR c.primer_nombre LIKE ? OR c.primer_apellido LIKE ?";
+    $where = "WHERE c.identificacion LIKE :search OR c.primer_nombre LIKE :search2 OR c.primer_apellido LIKE :search3";
     $search_term = "%$search%";
-    $params = [$search_term, $search_term, $search_term];
 }
 
 // Obtener colaboradores
@@ -31,18 +33,19 @@ $query = "SELECT c.*, COUNT(t.id_ticket) as total_tickets
           $where 
           GROUP BY c.id_colaborador 
           ORDER BY c.fecha_registro DESC 
-          LIMIT ?, ?";
+          LIMIT :offset, :limit";
+
 $stmt = $db->prepare($query);
 
 if ($search) {
-    $stmt->bindParam(1, $search_term);
-    $stmt->bindParam(2, $search_term);
-    $stmt->bindParam(3, $search_term);
-    $stmt->bindParam(4, $from_record_num, PDO::PARAM_INT);
-    $stmt->bindParam(5, $records_per_page, PDO::PARAM_INT);
+    $stmt->bindValue(':search', $search_term);
+    $stmt->bindValue(':search2', $search_term);
+    $stmt->bindValue(':search3', $search_term);
+    $stmt->bindValue(':offset', $from_record_num, PDO::PARAM_INT);
+    $stmt->bindValue(':limit', $records_per_page, PDO::PARAM_INT);
 } else {
-    $stmt->bindParam(1, $from_record_num, PDO::PARAM_INT);
-    $stmt->bindParam(2, $records_per_page, PDO::PARAM_INT);
+    $stmt->bindValue(':offset', $from_record_num, PDO::PARAM_INT);
+    $stmt->bindValue(':limit', $records_per_page, PDO::PARAM_INT);
 }
 
 $stmt->execute();
@@ -51,11 +54,16 @@ $colaboradores = $stmt->fetchAll(PDO::FETCH_ASSOC);
 // Total para paginación
 $count_query = "SELECT COUNT(*) FROM colaboradores c $where";
 $count_stmt = $db->prepare($count_query);
+
 if ($search) {
-    $count_stmt->execute([$search_term, $search_term, $search_term]);
+    $count_stmt->bindValue(':search', $search_term);
+    $count_stmt->bindValue(':search2', $search_term);
+    $count_stmt->bindValue(':search3', $search_term);
+    $count_stmt->execute();
 } else {
     $count_stmt->execute();
 }
+
 $total_rows = $count_stmt->fetchColumn();
 $total_pages = ceil($total_rows / $records_per_page);
 ?>
@@ -65,7 +73,7 @@ $total_pages = ceil($total_rows / $records_per_page);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Colaboradores - HelpDesk</title>
-    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
     <?php 
@@ -76,7 +84,6 @@ $total_pages = ceil($total_rows / $records_per_page);
     <div class="dashboard">
         <h1>Gestión de Colaboradores</h1>
 
-        <!-- Buscador -->
         <div style="margin-bottom: 2rem;">
             <form method="GET" class="form-inline" style="display: flex; gap: 1rem;">
                 <input type="text" name="search" class="form-control" placeholder="Buscar por cédula o nombre..." value="<?php echo htmlspecialchars($search); ?>">
@@ -87,7 +94,6 @@ $total_pages = ceil($total_rows / $records_per_page);
             </form>
         </div>
 
-        <!-- Tabla de colaboradores -->
         <div class="table-responsive">
             <table class="table">
                 <thead>
@@ -107,8 +113,31 @@ $total_pages = ceil($total_rows / $records_per_page);
                         <tr>
                             <td><?php echo $colab['id_colaborador']; ?></td>
                             <td><?php echo htmlspecialchars($colab['identificacion']); ?></td>
-                            <td><?php echo htmlspecialchars($colab['primer_nombre'] . ' ' . ($colab['segundo_nombre'] ? $colab['segundo_nombre'] . ' ' : '') . $colab['primer_apellido'] . ' ' . ($colab['segundo_apellido'] ? $colab['segundo_apellido'] : '')); ?></td>
-                            <td><?php echo $colab['sexo']; ?></td>
+                            <td>
+                                <?php 
+                                $nombre_completo = $colab['primer_nombre'];
+                                if (!empty($colab['segundo_nombre'])) {
+                                    $nombre_completo .= ' ' . $colab['segundo_nombre'];
+                                }
+                                $nombre_completo .= ' ' . $colab['primer_apellido'];
+                                if (!empty($colab['segundo_apellido'])) {
+                                    $nombre_completo .= ' ' . $colab['segundo_apellido'];
+                                }
+                                echo htmlspecialchars($nombre_completo);
+                                ?>
+                            </td>
+                            <td>
+                                <?php 
+                                $sexo_text = '';
+                                switch($colab['sexo']) {
+                                    case 'M': $sexo_text = 'Masculino'; break;
+                                    case 'F': $sexo_text = 'Femenino'; break;
+                                    case 'Otro': $sexo_text = 'Otro'; break;
+                                    default: $sexo_text = $colab['sexo'];
+                                }
+                                echo htmlspecialchars($sexo_text);
+                                ?>
+                            </td>
                             <td><?php echo date('d/m/Y', strtotime($colab['fecha_nacimiento'])); ?></td>
                             <td><?php echo $colab['total_tickets']; ?></td>
                             <td><?php echo date('d/m/Y H:i', strtotime($colab['fecha_registro'])); ?></td>
@@ -116,22 +145,47 @@ $total_pages = ceil($total_rows / $records_per_page);
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="7" style="text-align: center;">No se encontraron colaboradores</td>
+                            <td colspan="7" style="text-align: center; padding: 2rem;">
+                                <div style="color: #666;">
+                                    <p>No se encontraron colaboradores</p>
+                                    <?php if($search): ?>
+                                        <p>Intenta con otros términos de búsqueda</p>
+                                    <?php endif; ?>
+                                </div>
+                            </td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
             </table>
         </div>
 
-        <!-- Paginación -->
         <?php if ($total_pages > 1): ?>
-        <ul class="pagination">
-            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                <li class="<?php echo $i == $page ? 'active' : ''; ?>">
-                    <a href="colaboradores.php?page=<?php echo $i; ?>&search=<?php echo urlencode($search); ?>"><?php echo $i; ?></a>
-                </li>
-            <?php endfor; ?>
-        </ul>
+        <div class="pagination-container">
+            <div class="pagination">
+                <?php if ($page > 1): ?>
+                    <a href="colaboradores.php?page=<?php echo $page - 1; ?>&search=<?php echo urlencode($search); ?>" class="page-link">
+                        &laquo; Anterior
+                    </a>
+                <?php endif; ?>
+                
+                <?php 
+                $start_page = max(1, $page - 2);
+                $end_page = min($total_pages, $page + 2);
+                
+                for ($i = $start_page; $i <= $end_page; $i++): ?>
+                    <a href="colaboradores.php?page=<?php echo $i; ?>&search=<?php echo urlencode($search); ?>" 
+                       class="page-link <?php echo $i == $page ? 'active' : ''; ?>">
+                        <?php echo $i; ?>
+                    </a>
+                <?php endfor; ?>
+                
+                <?php if ($page < $total_pages): ?>
+                    <a href="colaboradores.php?page=<?php echo $page + 1; ?>&search=<?php echo urlencode($search); ?>" class="page-link">
+                        Siguiente &raquo;
+                    </a>
+                <?php endif; ?>
+            </div>
+        </div>
         <?php endif; ?>
     </div>
 </body>
