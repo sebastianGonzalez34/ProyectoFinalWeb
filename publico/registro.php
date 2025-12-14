@@ -204,7 +204,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <form method="POST" action="" enctype="multipart/form-data">
             <div class="form-row">
                 <div class="form-group">
-                    <label for="primer_nombre">Primer Nombre *</label>
+                    <label for="primer_nombre">Primer Nombre</label>
                     <input type="text" id="primer_nombre" name="primer_nombre"
                            value="<?php echo isset($_POST['primer_nombre']) ? htmlspecialchars($_POST['primer_nombre']) : ''; ?>"
                            required maxlength="50">
@@ -220,7 +220,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <div class="form-row">
                 <div class="form-group">
-                    <label for="primer_apellido">Primer Apellido *</label>
+                    <label for="primer_apellido">Primer Apellido</label>
                     <input type="text" id="primer_apellido" name="primer_apellido"
                            value="<?php echo isset($_POST['primer_apellido']) ? htmlspecialchars($_POST['primer_apellido']) : ''; ?>"
                            required maxlength="50">
@@ -236,7 +236,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <div class="form-row">
                 <div class="form-group">
-                    <label for="sexo">Sexo *</label>
+                    <label for="sexo">Sexo</label>
                     <select id="sexo" name="sexo" required>
                         <option value="">Seleccione...</option>
                         <option value="M" <?php echo (isset($_POST['sexo']) && $_POST['sexo'] == 'M') ? 'selected' : ''; ?>>Masculino</option>
@@ -246,7 +246,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
 
                 <div class="form-group">
-                    <label for="identificacion">Identificación *</label>
+                    <label for="identificacion">Identificación</label>
                     <input type="text" id="identificacion" name="identificacion"
                            value="<?php echo isset($_POST['identificacion']) ? htmlspecialchars($_POST['identificacion']) : ''; ?>"
                            required maxlength="20" placeholder="Cédula, pasaporte, etc.">
@@ -256,7 +256,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <!-- ✅ NUEVO: Usuario -->
             <div class="form-row">
                 <div class="form-group">
-                    <label for="username">Usuario *</label>
+                    <label for="username">Usuario</label>
                     <input type="text" id="username" name="username"
                            value="<?php echo isset($_POST['username']) ? htmlspecialchars($_POST['username']) : ''; ?>"
                            required maxlength="20" placeholder="Ej: juan.perez">
@@ -266,7 +266,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
 
                 <div class="form-group">
-                    <label for="fecha_nacimiento">Fecha de Nacimiento *</label>
+                    <label for="fecha_nacimiento">Fecha de Nacimiento</label>
                     <input type="date" id="fecha_nacimiento" name="fecha_nacimiento"
                            value="<?php echo isset($_POST['fecha_nacimiento']) ? htmlspecialchars($_POST['fecha_nacimiento']) : ''; ?>"
                            required>
@@ -275,7 +275,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <div class="form-row">
                 <div class="form-group">
-                    <label for="email">Correo Electrónico (opcional)</label>
+                    <label for="email">Correo Electrónico </label>
                     <input type="email" id="email" name="email"
                            value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>"
                            maxlength="100" placeholder="ejemplo@dominio.com">
@@ -283,7 +283,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <div class="form-group">
-                <label for="foto_perfil">Foto de Perfil (opcional)</label>
+                <label for="foto_perfil">Foto de Perfil </label>
                 <input type="file" id="foto_perfil" name="foto_perfil"
                        accept="image/jpeg,image/png,image/gif">
                 <small style="display: block; margin-top: 0.5rem; color: #666;">Formatos permitidos: JPG, PNG, GIF (Máximo 2MB)</small>
@@ -291,13 +291,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <div class="form-row">
                 <div class="form-group">
-                    <label for="password">Contraseña * (mínimo 8 caracteres)</label>
+                    <label for="password">Contraseña (mínimo 8 caracteres)</label>
                     <input type="password" id="password" name="password"
                            required minlength="8" placeholder="">
                 </div>
 
                 <div class="form-group">
-                    <label for="confirm_password">Confirmar Contraseña *</label>
+                    <label for="confirm_password">Confirmar Contraseña </label>
                     <input type="password" id="confirm_password" name="confirm_password"
                            required minlength="8" placeholder="">
                 </div>

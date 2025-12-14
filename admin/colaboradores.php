@@ -22,12 +22,25 @@ $where = '';
 $search_term = '';
 
 if ($search) {
-    $where = "WHERE c.identificacion LIKE :search OR c.primer_nombre LIKE :search2 OR c.primer_apellido LIKE :search3";
+    $where = "WHERE c.identificacion LIKE :search OR c.primer_nombre LIKE :search2 OR c.primer_apellido LIKE :search3 OR c.username LIKE :search4 OR c.email LIKE :search5";
     $search_term = "%$search%";
 }
 
-// Obtener colaboradores
-$query = "SELECT c.*, COUNT(t.id_ticket) as total_tickets 
+// Obtener colaboradores (SIN foto_perfil)
+$query = "SELECT 
+            c.id_colaborador, 
+            c.primer_nombre, 
+            c.segundo_nombre, 
+            c.primer_apellido, 
+            c.segundo_apellido, 
+            c.sexo, 
+            c.identificacion, 
+            c.username, 
+            c.fecha_nacimiento, 
+            c.email, 
+            c.password,
+            c.fecha_registro,
+            COUNT(t.id_ticket) as total_tickets 
           FROM colaboradores c 
           LEFT JOIN tickets t ON c.id_colaborador = t.id_colaborador 
           $where 
@@ -41,6 +54,8 @@ if ($search) {
     $stmt->bindValue(':search', $search_term);
     $stmt->bindValue(':search2', $search_term);
     $stmt->bindValue(':search3', $search_term);
+    $stmt->bindValue(':search4', $search_term);
+    $stmt->bindValue(':search5', $search_term);
     $stmt->bindValue(':offset', $from_record_num, PDO::PARAM_INT);
     $stmt->bindValue(':limit', $records_per_page, PDO::PARAM_INT);
 } else {
@@ -59,6 +74,8 @@ if ($search) {
     $count_stmt->bindValue(':search', $search_term);
     $count_stmt->bindValue(':search2', $search_term);
     $count_stmt->bindValue(':search3', $search_term);
+    $count_stmt->bindValue(':search4', $search_term);
+    $count_stmt->bindValue(':search5', $search_term);
     $count_stmt->execute();
 } else {
     $count_stmt->execute();
@@ -86,7 +103,7 @@ $total_pages = ceil($total_rows / $records_per_page);
 
         <div style="margin-bottom: 2rem;">
             <form method="GET" class="form-inline" style="display: flex; gap: 1rem;">
-                <input type="text" name="search" class="form-control" placeholder="Buscar por cédula o nombre..." value="<?php echo htmlspecialchars($search); ?>">
+                <input type="text" name="search" class="form-control" placeholder="Buscar por cédula, nombre, usuario o email..." value="<?php echo htmlspecialchars($search); ?>">
                 <button type="submit" class="btn btn-primary">Buscar</button>
                 <?php if($search): ?>
                     <a href="colaboradores.php" class="btn btn-secondary">Limpiar</a>
@@ -100,9 +117,11 @@ $total_pages = ceil($total_rows / $records_per_page);
                     <tr>
                         <th>ID</th>
                         <th>Identificación</th>
+                        <th>Usuario</th>
                         <th>Nombre Completo</th>
                         <th>Sexo</th>
                         <th>Fecha Nacimiento</th>
+                        <th>Email</th>
                         <th>Total Tickets</th>
                         <th>Fecha Registro</th>
                     </tr>
@@ -113,6 +132,7 @@ $total_pages = ceil($total_rows / $records_per_page);
                         <tr>
                             <td><?php echo $colab['id_colaborador']; ?></td>
                             <td><?php echo htmlspecialchars($colab['identificacion']); ?></td>
+                            <td><?php echo htmlspecialchars($colab['username'] ?? 'N/A'); ?></td>
                             <td>
                                 <?php 
                                 $nombre_completo = $colab['primer_nombre'];
@@ -139,13 +159,14 @@ $total_pages = ceil($total_rows / $records_per_page);
                                 ?>
                             </td>
                             <td><?php echo date('d/m/Y', strtotime($colab['fecha_nacimiento'])); ?></td>
+                            <td><?php echo htmlspecialchars($colab['email'] ?? 'N/A'); ?></td>
                             <td><?php echo $colab['total_tickets']; ?></td>
                             <td><?php echo date('d/m/Y H:i', strtotime($colab['fecha_registro'])); ?></td>
                         </tr>
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="7" style="text-align: center; padding: 2rem;">
+                            <td colspan="9" style="text-align: center; padding: 2rem;">
                                 <div style="color: #666;">
                                     <p>No se encontraron colaboradores</p>
                                     <?php if($search): ?>

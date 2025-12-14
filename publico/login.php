@@ -4,22 +4,17 @@ require_once '../includes/database.php';
 require_once '../includes/sanitize.php';
 
 $sanitize = new Sanitize();
-
-// Si ya está logueado, redirigir al index
-if (isset($_SESSION['user_id'])) {
-    header("Location: index.php");
-    exit();
-}
+$errores = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = $sanitize->cleanInput($_POST['username']);
-    $password = $_POST['password'] ?? '';
-    $tipo_usuario = $sanitize->cleanInput($_POST['tipo_usuario']);
 
-    $errores = [];
+    // Forzado: SOLO COLABORADOR
+    $tipo_usuario = 'colaborador';
+
+    $username = $sanitize->cleanInput($_POST['username'] ?? '');
+    $password = $_POST['password'] ?? '';
 
     if (empty($username)) {
-        // ✅ Ajuste del texto
         $errores[] = "El usuario es requerido";
     }
 
@@ -27,79 +22,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errores[] = "La contraseña es requerida";
     }
 
-    if (empty($tipo_usuario)) {
-        $errores[] = "Debe seleccionar un tipo de usuario";
-    }
-
     if (empty($errores)) {
         try {
             $database = new Database();
             $db = $database->getConnection();
 
-            if ($tipo_usuario === 'colaborador') {
-                // ✅ CAMBIO: colaboradores ahora inician por username (y opcionalmente email)
-                $query = "SELECT id_colaborador, primer_nombre, primer_apellido, email, identificacion, username, password
-                         FROM colaboradores
-                         WHERE username = :username OR email = :username";
-                $stmt = $db->prepare($query);
-                $stmt->bindParam(':username', $username);
-                $stmt->execute();
+            $query = "SELECT id_colaborador, primer_nombre, primer_apellido,
+                             email, identificacion, username, password
+                      FROM colaboradores
+                      WHERE username = :username OR email = :username";
 
-                if ($stmt->rowCount() === 1) {
-                    $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+            $stmt = $db->prepare($query);
+            $stmt->bindParam(':username', $username);
+            $stmt->execute();
 
-                    if (password_verify($password, $usuario['password'])) {
-                        $_SESSION['user_id'] = $usuario['id_colaborador'];
-                        $_SESSION['user_tipo'] = 'colaborador';
-                        $_SESSION['user_email'] = $usuario['email'];
-                        $_SESSION['user_nombre'] = $usuario['primer_nombre'];
-                        $_SESSION['user_apellido'] = $usuario['primer_apellido'];
-                        $_SESSION['user_identificacion'] = $usuario['identificacion'];
-                        $_SESSION['user_username'] = $usuario['username'];
+            if ($stmt->rowCount() === 1) {
+                $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
-                        header("Location: index.php");
-                        exit();
-                    } else {
-                        $errores[] = "Credenciales incorrectas";
-                    }
-                } else {
-                    $errores[] = "Credenciales incorrectas";
-                }
+                if (password_verify($password, $usuario['password'])) {
 
-            } elseif ($tipo_usuario === 'personal') {
-                // Login para personal (admin/agentes) - se mantiene igual
-                $query = "SELECT id_usuario, username, email, rol, password
-                         FROM usuarios WHERE username = :username AND activo = 1";
-                $stmt = $db->prepare($query);
-                $stmt->bindParam(':username', $username);
-                $stmt->execute();
+                    $_SESSION['user_id'] = $usuario['id_colaborador'];
+                    $_SESSION['user_tipo'] = 'colaborador';
+                    $_SESSION['user_email'] = $usuario['email'];
+                    $_SESSION['user_nombre'] = $usuario['primer_nombre'];
+                    $_SESSION['user_apellido'] = $usuario['primer_apellido'];
+                    $_SESSION['user_identificacion'] = $usuario['identificacion'];
+                    $_SESSION['user_username'] = $usuario['username'];
 
-                if ($stmt->rowCount() === 1) {
-                    $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
-
-                    if (password_verify($password, $usuario['password'])) {
-                        $_SESSION['user_id'] = $usuario['id_usuario'];
-                        $_SESSION['user_tipo'] = 'personal';
-                        $_SESSION['user_rol'] = $usuario['rol'];
-                        $_SESSION['user_email'] = $usuario['email'];
-                        $_SESSION['user_nombre'] = $usuario['username'];
-
-                        // Redirigir según el rol
-                        if ($usuario['rol'] === 'admin') {
-                            header("Location: ../admin/index.php");
-                        } else {
-                            header("Location: ../agente/index.php");
-                        }
-                        exit();
-                    } else {
-                        $errores[] = "Credenciales incorrectas";
-                    }
-                } else {
-                    $errores[] = "Credenciales incorrectas";
+                    header("Location: index.php");
+                    exit();
                 }
             }
-        } catch(PDOException $exception) {
-            $errores[] = "Error de base de datos: " . $exception->getMessage();
+
+            $errores[] = "Usuario o contraseña incorrectos";
+
+        } catch (PDOException $e) {
+            $errores[] = "Error de conexión";
         }
     }
 }
@@ -109,11 +67,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <title>HelpDesk - Iniciar Sesión</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión - HelpDesk</title>
     <link rel="stylesheet" href="../css/styles.css">
 </head>
 <body>
+
 <header class="header">
     <div class="container">
         <nav class="navbar">
@@ -142,46 +101,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         <?php endif; ?>
 
-        <form method="POST" action="">
-            <div class="form-group">
-                <label for="tipo_usuario">Tipo de Usuario *</label>
-                <select id="tipo_usuario" name="tipo_usuario" required>
-                    <option value="">Seleccione...</option>
-                    <option value="colaborador" <?php echo (isset($_POST['tipo_usuario']) && $_POST['tipo_usuario'] == 'colaborador') ? 'selected' : ''; ?>>Colaborador/Estudiante</option>
-                    <option value="personal" <?php echo (isset($_POST['tipo_usuario']) && $_POST['tipo_usuario'] == 'personal') ? 'selected' : ''; ?>>Personal (Admin/Agente)</option>
-                </select>
-            </div>
+        <form method="POST">
+
+            <!-- SIN TIPO DE USUARIO -->
 
             <div class="form-group">
                 <label for="username">Usuario *</label>
-                <input type="text" id="username" name="username"
-                       value="<?php echo isset($_POST['username']) ? htmlspecialchars($_POST['username']) : ''; ?>"
-                       required placeholder="Ingrese su usuario">
+                <input type="text" id="username" name="username" required>
             </div>
 
             <div class="form-group">
                 <label for="password">Contraseña *</label>
-                <input type="password" id="password" name="password"
-                       required placeholder="Ingrese su contraseña">
+                <input type="password" id="password" name="password" required>
             </div>
 
-            <div class="form-actions">
-                <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+            <input type="hidden" name="tipo_usuario" value="colaborador">
 
-                <div style="text-align: center; margin-top: 1rem;">
-                    <a href="registro.php" class="btn-link" style="color: #007bff; text-decoration: none;">
-                        ¿Eres colaborador y no tienes cuenta? Regístrate aquí
-                    </a>
-                </div>
-
-                <div style="text-align: center; margin-top: 0.5rem;">
-                    <a href="cambiar_password.php" class="btn-link" style="color: #6c757d; text-decoration: none;">
-                        ¿Olvidaste tu contraseña?
-                    </a>
-                </div>
-            </div>
+            <button type="submit" class="btn btn-primary">
+                Iniciar Sesión
+            </button>
         </form>
+
+        <!-- 🔁 RESTAURADO EXACTO COMO ANTES -->
+        <div class="login-links">
+            <p>
+                ¿Eres colaborador y no tienes cuenta?
+                <a href="registro.php">Regístrate aquí</a>
+            </p>
+        </div>
     </div>
 </main>
+
 </body>
 </html>

@@ -5040,3 +5040,291 @@ input:checked + .toggle-slider:before {
         min-width: auto;
     }
 }
+
+/* ===== LOGIN LINKS ===== */
+.login-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    text-align: center;
+}
+
+.login-links a {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
+    padding: 0.3rem 0;
+}
+
+.login-links a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+.login-links .register-link {
+    font-weight: 600;
+    color: #28a745;
+}
+
+.login-links .register-link:hover {
+    color: #1e7e34;
+}
+
+.login-links .forgot-link {
+    color: #6c757d;
+}
+
+.login-links .forgot-link:hover {
+    color: #545b62;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .login-links {
+        margin-top: 1rem;
+    }
+    
+    .login-links a {
+        font-size: 0.9rem;
+    }
+}
+
+/* ===== PERFIL DE USUARIO ===== */
+.user-profile-container {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+}
+
+.user-profile-picture {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #007bff;
+    box-shadow: 0 4px 12px rgba(0,123,255,0.2);
+}
+
+.user-profile-info {
+    flex: 1;
+}
+
+.user-profile-info h2 {
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+    font-size: 1.8rem;
+}
+
+.user-profile-info p {
+    color: #666;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.default-profile-picture {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 3rem;
+    border: 4px solid #007bff;
+    box-shadow: 0 4px 12px rgba(0,123,255,0.2);
+}
+
+/* Video embeds */
+.video-container {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%;
+    height: 0;
+    margin: 1rem 0;
+    overflow: hidden;
+    border-radius: 8px;
+    background: #000;
+}
+
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* Responsive para perfil */
+@media (max-width: 768px) {
+    .user-profile-container {
+        flex-direction: column;
+        text-align: center;
+        gap: 1.5rem;
+        padding: 1.5rem;
+    }
+    
+    .user-profile-picture,
+    .default-profile-picture {
+        width: 120px;
+        height: 120px;
+    }
+}
+
+/* ===== PERFIL DE USUARIO (USANDO TUS ESTILOS) ===== */
+.user-profile-container {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    padding: 2.5rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    border: 1px solid var(--light-gray);
+}
+
+.user-profile-picture {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #4361ee;
+    box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+    transition: transform 0.3s ease;
+}
+
+.user-profile-picture:hover {
+    transform: scale(1.05);
+}
+
+.user-profile-info {
+    flex: 1;
+}
+
+.user-profile-info h2 {
+    font-size: 2rem;
+    margin-bottom: 0.8rem;
+    font-weight: 700;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.user-profile-info p {
+    color: var(--dark-color);
+    margin-bottom: 1.5rem;
+    opacity: 0.8;
+    font-size: 1.1rem;
+}
+
+.default-profile-picture {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: var(--gradient-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 3rem;
+    font-weight: bold;
+    border: 4px solid #3a0ca3;
+    box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+}
+
+/* Video embeds */
+.video-container {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%;
+    height: 0;
+    margin: 1.5rem 0;
+    overflow: hidden;
+    border-radius: var(--border-radius);
+    background: #000;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* Responsive para perfil */
+@media (max-width: 768px) {
+    .user-profile-container {
+        flex-direction: column;
+        text-align: center;
+        gap: 1.5rem;
+        padding: 2rem;
+    }
+    
+    .user-profile-picture,
+    .default-profile-picture {
+        width: 120px;
+        height: 120px;
+        font-size: 2rem;
+    }
+    
+    .user-profile-info h2 {
+        font-size: 1.6rem;
+    }
+}
+
+/* ===== PERFIL DE USUARIO CON FONDO AZUL DEGRADADO ===== */
+.user-profile-container {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin: 2rem 0;
+    padding: 2.5rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+    color: white;
+}
+
+.user-profile-info h2 {
+    font-size: 2rem;
+    margin-bottom: 0.8rem;
+    color: white;
+    font-weight: 700;
+}
+
+.user-profile-info p {
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
+    line-height: 1.5;
+}
+
+.user-profile-picture {
+    border: 4px solid white;
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+}
+
+.default-profile-picture {
+    border: 4px solid white;
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+}
+
+/* ===== BOTÓN DE CAMBIAR CONTRASEÑA EN PERFIL AZUL ===== */
+.user-profile-container .btn-outline {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: white;
+    color: white;
+}
+
+.user-profile-container .btn-outline:hover {
+    background: white;
+    color: #4361ee;
+    border-color: white;
+}
