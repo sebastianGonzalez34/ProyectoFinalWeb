@@ -65,7 +65,7 @@ $user_nombre = isset($_SESSION['user_nombre']) ? htmlspecialchars($_SESSION['use
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ver Ticket - HelpDesk</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
     <header class="header">
@@ -99,26 +99,34 @@ $user_nombre = isset($_SESSION['user_nombre']) ? htmlspecialchars($_SESSION['use
             </div>
         <?php elseif ($ticket): ?>
             <div class="ticket-header">
-                <div class="ticket-title-section">
-                    <h1>Ticket #<?php echo $ticket['id_ticket']; ?></h1>
-                    <h2><?php echo htmlspecialchars($ticket['titulo']); ?></h2>
-                    <?php if ($ticket['urgente'] == 1): ?>
-                        <span class="badge badge-urgent">URGENTE</span>
-                    <?php endif; ?>
-                </div>
-                
-                <div class="ticket-status-section">
-                    <span class="badge badge-<?php echo strtolower(str_replace(' ', '-', $ticket['estado'])); ?>">
-                        <?php echo $ticket['estado']; ?>
-                    </span>
-                    <div class="ticket-actions">
-                        <a href="mis_tickets.php" class="btn btn-secondary">Volver</a>
-                        <?php if ($ticket['estado'] == 'Cerrado'): ?>
-                            <button class="btn btn-success" onclick="mostrarEncuesta()">Encuesta de Satisfacción</button>
-                        <?php endif; ?>
-                    </div>
-                </div>
+    <div class="ticket-title-section">
+        <h1>Ticket #<?php echo $ticket['id_ticket']; ?></h1>
+        <h2><?php echo htmlspecialchars($ticket['titulo']); ?></h2>
+        <?php if ($ticket['urgente'] == 1): ?>
+            <span class="badge badge-urgent">URGENTE</span>
+        <?php endif; ?>
+        
+        <!-- AQUÍ VAN LOS BOTONES DEBajo del título -->
+        <div class="ticket-header-actions">
+            <div class="status-badge-container">
+                <span class="badge badge-<?php echo strtolower(str_replace(' ', '-', $ticket['estado'])); ?>">
+                    <?php echo $ticket['estado']; ?>
+                </span>
             </div>
+            
+            <div class="ticket-actions">
+                <a href="mis_tickets.php" class="btn btn-secondary btn-sm">
+                    <span class="btn-icon">←</span> Volver
+                </a>
+                <?php if ($ticket['estado'] == 'Cerrado'): ?>
+                    <button class="btn btn-success btn-sm" onclick="mostrarEncuesta()">
+                        <span class="btn-icon">📝</span> Encuesta
+                    </button>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</div>
 
             <div class="ticket-details-grid">
                 <!-- Información Principal -->

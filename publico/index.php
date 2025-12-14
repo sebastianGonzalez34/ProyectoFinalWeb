@@ -22,6 +22,7 @@ if ($usuario_logueado) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal Público - HelpDesk</title>
     <link rel="stylesheet" href="../css/styles.css">
+    <!-- QUITAR EL STYLE TEMPORAL DE DEBUG -->
 </head>
 <body>
     <header class="header">
@@ -36,7 +37,7 @@ if ($usuario_logueado) {
                         <li><a href="crear_ticket.php">Crear Ticket</a></li>
                         <li><a href="mis_tickets.php">Mis Tickets</a></li>
                         <li><a href="cambiar_password.php">Cambiar Contraseña</a></li>
-                        <li><a href="logout.php" class="btn btn-logout" style="color: white;">Cerrar Sesión</a></li>
+                        <li><a href="logout.php" class="btn btn-logout">Cerrar Sesión</a></li>
                     <?php else: ?>
                         <li><a href="registro.php" class="btn btn-outline">Registrarse</a></li>
                         <li><a href="login.php" class="btn btn-primary">Iniciar Sesión</a></li>
@@ -49,25 +50,41 @@ if ($usuario_logueado) {
     <main class="container">
         <?php if ($usuario_logueado): ?>
             <div class="welcome-message">
-                <h2>¡Bienvenido, <?php echo $nombre_usuario; ?>!</h2>
+                <h2>¡Bienvenido, <?php echo htmlspecialchars($nombre_usuario); ?>!</h2>
                 <p>Has iniciado sesión correctamente. ¿Qué te gustaría hacer?</p>
-                <div class="form-actions" style="justify-content: center; margin-top: 2rem;">
-                    <a href="crear_ticket.php" class="btn btn-primary">Crear Nuevo Ticket</a>
-                    <a href="mis_tickets.php" class="btn btn-secondary">Ver Mis Tickets</a>
-                    <a href="cambiar_password.php" class="btn btn-outline" style="background: rgba(255,255,255,0.2); border-color: white;">Cambiar Contraseña</a>
-                </div>
+                <!-- Versión con íconos pero sin efectos raros -->
+<div class="form-actions">
+    <a href="crear_ticket.php" class="btn btn-primary">
+        <span class="btn-icon">📝</span>
+        <span>Crear Nuevo Ticket</span>
+    </a>
+    <a href="mis_tickets.php" class="btn btn-secondary">
+        <span class="btn-icon">📋</span>
+        <span>Ver Mis Tickets</span>
+    </a>
+    <a href="cambiar_password.php" class="btn btn-outline">
+        <span class="btn-icon">🔐</span>
+        <span>Cambiar Contraseña</span>
+    </a>
+</div>
+</div>
             </div>
         <?php else: ?>
-            <div class="hero-section" style="text-align: center; padding: 4rem 0;">
-                <h1 style="font-size: 2.5rem; margin-bottom: 1rem; color: #2c3e50;">Bienvenido al Sistema de HelpDesk</h1>
-                <p style="font-size: 1.2rem; color: #666; margin-bottom: 2rem;">Sistema de gestión de tickets y soporte técnico</p>
-                <div class="form-actions" style="justify-content: center;">
-                    <a href="registro.php" class="btn btn-primary">Registrarse</a>
-                    <a href="login.php" class="btn btn-secondary">Iniciar Sesión</a>
-                </div>
+            <div class="hero-section">
+                <h1>Bienvenido al Sistema de HelpDesk</h1>
+                <p>Sistema de gestión de tickets y soporte técnico</p>
+                <div class="form-actions">
+    <a href="registro.php" class="btn btn-primary">
+        <span class="btn-icon">📝</span>
+        <span>Registrarse</span>
+    </a>
+    <a href="login.php" class="btn btn-secondary">
+        <span>Iniciar Sesión</span>
+    </a>
+</div>
             </div>
         <?php endif; ?>
-
+        
         <div class="news-section">
             <h2>Noticias y Novedades</h2>
             

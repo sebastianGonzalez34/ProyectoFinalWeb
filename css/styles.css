@@ -2193,3 +2193,2655 @@ body {
         font-size: 0.9rem;
     }
 }
+
+/* ===== RESET Y CONFIGURACIONES GLOBALES ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #4361ee;
+    --primary-dark: #3a56d4;
+    --secondary-color: #7209b7;
+    --accent-color: #f72585;
+    --success-color: #4cc9f0;
+    --danger-color: #f72585;
+    --warning-color: #ff9e00;
+    --light-color: #f8f9fa;
+    --dark-color: #212529;
+    --gray-color: #6c757d;
+    --light-gray: #e9ecef;
+    --border-radius: 12px;
+    --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    --transition: all 0.3s ease;
+    --gradient-primary: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+    --gradient-secondary: linear-gradient(135deg, #7209b7 0%, #4361ee 100%);
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: var(--dark-color);
+    background-color: #f5f7ff;
+    min-height: 100vh;
+    background-image: 
+        radial-gradient(circle at 10% 20%, rgba(67, 97, 238, 0.05) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(114, 9, 183, 0.05) 0%, transparent 20%);
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* ===== HEADER Y NAVEGACIÓN ===== */
+.header {
+    background: var(--gradient-primary);
+    padding: 1.2rem 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--accent-color);
+    background: linear-gradient(90deg, var(--accent-color) 0%, var(--success-color) 100%);
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+}
+
+.logo h2 {
+    color: white;
+    font-weight: 700;
+    font-size: 1.8rem;
+    letter-spacing: -0.5px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    gap: 2rem;
+}
+
+.nav-menu li a {
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    transition: var(--transition);
+    position: relative;
+}
+
+.nav-menu li a:hover {
+    color: white;
+    background-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+.nav-menu li a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background-color: white;
+    transition: var(--transition);
+    transform: translateX(-50%);
+}
+
+.nav-menu li a:hover::after {
+    width: 70%;
+}
+
+/* ===== CONTENIDO PRINCIPAL ===== */
+main.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 120px);
+    padding: 2rem 1rem;
+}
+
+/* ===== FORMULARIO DE LOGIN ===== */
+.form-container {
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 480px;
+    position: relative;
+    overflow: hidden;
+    transition: var(--transition);
+}
+
+.form-container:hover {
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+    transform: translateY(-5px);
+}
+
+.form-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: var(--gradient-primary);
+}
+
+.form-container h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--dark-color);
+    font-size: 2rem;
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 1rem;
+}
+
+.form-container h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    background: var(--gradient-primary);
+    border-radius: 2px;
+}
+
+/* ===== MENSAJES DE ERROR ===== */
+.error-message {
+    background-color: rgba(247, 37, 133, 0.1);
+    border-left: 4px solid var(--danger-color);
+    padding: 1.2rem;
+    margin-bottom: 1.5rem;
+    border-radius: 0 8px 8px 0;
+    animation: slideIn 0.3s ease-out;
+}
+
+.error-message ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.error-message li {
+    color: #b5174e;
+    font-weight: 500;
+    padding: 0.2rem 0;
+    display: flex;
+    align-items: center;
+}
+
+.error-message li::before {
+    content: '⚠';
+    margin-right: 0.5rem;
+    font-size: 1.1rem;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* ===== GRUPOS DE FORMULARIO ===== */
+.form-group {
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--dark-color);
+    font-size: 0.95rem;
+}
+
+.form-group label::after {
+    content: ' *';
+    color: var(--danger-color);
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid var(--light-gray);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: var(--transition);
+    background-color: white;
+    color: var(--dark-color);
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+}
+
+.form-group input::placeholder {
+    color: #adb5bd;
+}
+
+/* ===== BOTONES ===== */
+.form-actions {
+    margin-top: 2rem;
+}
+
+.btn {
+    display: inline-block;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: var(--transition);
+    border: none;
+    text-decoration: none;
+    width: 100%;
+    letter-spacing: 0.5px;
+}
+
+.btn-primary {
+    background: var(--gradient-primary);
+    color: white;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: var(--gradient-secondary);
+    transition: var(--transition);
+    z-index: -1;
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(67, 97, 238, 0.3);
+}
+
+.btn-primary:hover::before {
+    left: 0;
+}
+
+/* ===== ENLACES ===== */
+.btn-link {
+    display: inline-block;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: var(--transition);
+    padding: 0.5rem 0;
+    position: relative;
+}
+
+.btn-link:hover {
+    color: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+.btn-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--primary-color);
+    transition: var(--transition);
+}
+
+.btn-link:hover::after {
+    width: 100%;
+}
+
+/* ===== ENLACES ADICIONALES ===== */
+.form-actions > div {
+    margin-top: 1rem;
+    text-align: center;
+}
+
+.form-actions > div:first-of-type .btn-link {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.form-actions > div:last-of-type .btn-link {
+    color: var(--gray-color);
+    font-size: 0.95rem;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .header {
+        padding: 1rem 0;
+    }
+    
+    .navbar {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .nav-menu {
+        gap: 1rem;
+    }
+    
+    .logo h2 {
+        font-size: 1.5rem;
+    }
+    
+    .form-container {
+        padding: 2rem 1.5rem;
+        margin: 0 1rem;
+    }
+    
+    .form-container h2 {
+        font-size: 1.7rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-menu {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .form-container {
+        padding: 1.5rem 1rem;
+    }
+    
+    .btn {
+        padding: 0.9rem 1.5rem;
+    }
+}
+
+/* ===== ANIMACIONES Y EFECTOS ADICIONALES ===== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.form-container {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Efecto para el select */
+.form-group select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236c757d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1.2em;
+    padding-right: 3rem;
+}
+
+/* Estilo para el hover del select */
+.form-group select:hover {
+    border-color: #b8b8b8;
+}
+
+/* ===== FOOTER (si decides agregarlo después) ===== */
+.footer {
+    text-align: center;
+    padding: 2rem;
+    color: var(--gray-color);
+    font-size: 0.9rem;
+    border-top: 1px solid var(--light-gray);
+    margin-top: 3rem;
+}
+
+/* ===== ESTILOS PARA CAMPOS VÁLIDOS/INVÁLIDOS ===== */
+.form-group input:valid:not(:placeholder-shown) {
+    border-color: var(--success-color);
+}
+
+.form-group input:invalid:not(:placeholder-shown) {
+    border-color: var(--danger-color);
+}
+
+/* ===== LOADING STATE (para futuras implementaciones) ===== */
+.btn-loading {
+    position: relative;
+    color: transparent !important;
+}
+
+.btn-loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+/* ===== ESTILOS ESPECÍFICOS PARA PORTAL PÚBLICO ===== */
+
+/* ===== MENSAJE DE BIENVENIDA - DISEÑO CORREGIDO ===== */
+.welcome-message {
+    background: linear-gradient(135deg, #fff5f5 0%, #fff 100%);
+    border-radius: var(--border-radius);
+    padding: 2.5rem;
+    text-align: center;
+    width: 100%;
+    max-width: 600px;
+    margin: 2rem auto 3rem;
+    box-shadow: var(--box-shadow);
+    border: 2px solid rgba(231, 76, 60, 0.15);
+    position: relative;
+    overflow: hidden;
+}
+
+.welcome-message::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg, #e74c3c 0%, #f39c12 100%);
+}
+
+.welcome-message::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 150px;
+    height: 150px;
+    background: radial-gradient(circle, rgba(231, 76, 60, 0.08) 0%, transparent 70%);
+    z-index: 0;
+}
+
+.welcome-message h2 {
+    font-size: 2.2rem;
+    margin-bottom: 1rem;
+    color: #e74c3c;
+    position: relative;
+    z-index: 1;
+    font-weight: 700;
+}
+
+.welcome-message p {
+    font-size: 1.1rem;
+    color: #7f8c8d;
+    position: relative;
+    z-index: 1;
+    max-width: 500px;
+    margin: 0 auto 2rem;
+    line-height: 1.6;
+}
+
+/* ===== BOTONES EN MENSAJE DE BIENVENIDA ===== */
+.welcome-message .form-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
+}
+
+/* Botón primario personalizado para welcome */
+.welcome-message .btn-primary {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    color: white;
+    border: none;
+    padding: 0.9rem 1.8rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 15px rgba(231, 76, 60, 0.25);
+    min-width: 160px;
+}
+
+.welcome-message .btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(231, 76, 60, 0.3);
+    background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
+}
+
+.welcome-message .btn-secondary {
+    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    color: white;
+    border: none;
+    padding: 0.9rem 1.8rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 15px rgba(52, 152, 219, 0.25);
+    min-width: 160px;
+}
+
+.welcome-message .btn-secondary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(52, 152, 219, 0.3);
+    background: linear-gradient(135deg, #2980b9 0%, #3498db 100%);
+}
+
+.welcome-message .btn-outline {
+    background: transparent;
+    border: 2px solid #e74c3c;
+    color: #e74c3c;
+    padding: 0.9rem 1.8rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    min-width: 160px;
+}
+
+.welcome-message .btn-outline:hover {
+    background: #e74c3c;
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(231, 76, 60, 0.25);
+}
+
+/* ===== HERO SECTION (para usuarios no logueados) ===== */
+.hero-section {
+    padding: 3rem 2rem;
+    margin: 2rem auto 3rem;
+    border-radius: var(--border-radius);
+    background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%);
+    box-shadow: var(--box-shadow);
+    border: 1px solid var(--light-gray);
+    text-align: center;
+    max-width: 800px;
+}
+
+.hero-section h1 {
+    font-size: 2.5rem;
+    color: var(--dark-color);
+    margin-bottom: 1.2rem;
+    font-weight: 800;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    line-height: 1.2;
+}
+
+.hero-section p {
+    font-size: 1.2rem;
+    color: var(--gray-color);
+    margin-bottom: 2.5rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* ===== NEWS SECTION ===== */
+.news-section {
+    margin: 4rem 0;
+    padding: 2.5rem;
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+.news-section h2 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 2.5rem;
+    color: var(--dark-color);
+    position: relative;
+    padding-bottom: 1rem;
+}
+
+.news-section h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: var(--gradient-primary);
+    border-radius: 2px;
+}
+
+.news-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.8rem;
+    margin-top: 1.5rem;
+}
+
+.news-card {
+    background: linear-gradient(145deg, #ffffff, #f8f9ff);
+    border-radius: var(--border-radius);
+    padding: 1.8rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(67, 97, 238, 0.1);
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.news-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 5px;
+    height: 100%;
+    background: var(--gradient-primary);
+    transition: var(--transition);
+}
+
+.news-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 25px rgba(67, 97, 238, 0.15);
+    border-color: rgba(67, 97, 238, 0.2);
+}
+
+.news-card:hover::before {
+    width: 8px;
+}
+
+.news-card h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.8rem;
+    color: var(--dark-color);
+    font-weight: 700;
+}
+
+.news-card p {
+    color: var(--gray-color);
+    line-height: 1.6;
+    margin-bottom: 0;
+    font-size: 0.95rem;
+}
+
+/* ===== ANIMACIÓN PARA EL MENSAJE DE BIENVENIDA ===== */
+@keyframes welcomeFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.welcome-message {
+    animation: welcomeFadeIn 0.6s ease-out;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .welcome-message {
+        padding: 2rem 1.5rem;
+        margin: 1.5rem auto 2.5rem;
+    }
+    
+    .welcome-message h2 {
+        font-size: 1.8rem;
+    }
+    
+    .welcome-message p {
+        font-size: 1rem;
+    }
+    
+    .welcome-message .form-actions {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.8rem;
+    }
+    
+    .welcome-message .btn-primary,
+    .welcome-message .btn-secondary,
+    .welcome-message .btn-outline {
+        width: 100%;
+        max-width: 250px;
+    }
+    
+    .hero-section {
+        padding: 2.5rem 1.5rem;
+        margin: 1.5rem auto 2.5rem;
+    }
+    
+    .hero-section h1 {
+        font-size: 2rem;
+    }
+    
+    .hero-section p {
+        font-size: 1.1rem;
+    }
+    
+    .news-section {
+        padding: 2rem 1.5rem;
+        margin: 3rem 0;
+    }
+    
+    .news-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .welcome-message {
+        padding: 1.8rem 1.2rem;
+    }
+    
+    .welcome-message h2 {
+        font-size: 1.6rem;
+    }
+    
+    .welcome-message .btn-primary,
+    .welcome-message .btn-secondary,
+    .welcome-message .btn-outline {
+        padding: 0.8rem 1.5rem;
+        font-size: 0.95rem;
+    }
+    
+    .hero-section h1 {
+        font-size: 1.8rem;
+    }
+    
+    .news-card {
+        padding: 1.5rem;
+    }
+    
+    .news-card h3 {
+        font-size: 1.2rem;
+    }
+}
+
+/* ===== AJUSTES PARA EL LAYOUT CORRECTO ===== */
+
+/* Asegurar que el main tenga display block para elementos en columna */
+.container {
+    display: block;
+    width: 100%;
+}
+
+/* Asegurar que el mensaje de bienvenida ocupe todo el ancho disponible */
+.welcome-message {
+    background: linear-gradient(135deg, #fff5f5 0%, #fff 100%);
+    border-radius: var(--border-radius);
+    padding: 2.5rem;
+    text-align: center;
+    width: 100%;
+    max-width: 600px;
+    margin: 2rem auto 3rem;
+    box-shadow: var(--box-shadow);
+    border: 2px solid rgba(231, 76, 60, 0.15);
+    position: relative;
+    overflow: hidden;
+    display: block; /* Asegurar display block */
+    float: none; /* Evitar float si existe */
+}
+
+/* Hero section también debe ocupar todo el ancho */
+.hero-section {
+    padding: 3rem 2rem;
+    margin: 2rem auto 3rem;
+    border-radius: var(--border-radius);
+    background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%);
+    box-shadow: var(--box-shadow);
+    border: 1px solid var(--light-gray);
+    text-align: center;
+    max-width: 800px;
+    display: block; /* Asegurar display block */
+    float: none; /* Evitar float si existe */
+}
+
+/* News section debe estar debajo */
+.news-section {
+    margin: 4rem 0;
+    padding: 2.5rem;
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    display: block; /* Asegurar display block */
+    float: none; /* Evitar float si existe */
+    clear: both; /* Limpiar cualquier float anterior */
+}
+
+/* Asegurar que el grid dentro de news-section esté correctamente */
+.news-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.8rem;
+    margin-top: 1.5rem;
+}
+
+/* Limpiar cualquier float en todo el main */
+main.container::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/* ===== CORRECCIÓN DE DISPLAY Y LAYOUT ===== */
+
+/* Reset para main container */
+main.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+    padding: 2rem 1rem;
+}
+
+/* ===== NAVBAR MEJORADA ===== */
+.header {
+    background: linear-gradient(135deg, #4a6fa5 0%, #3a5a8c 100%);
+    padding: 0.8rem 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.logo h2 {
+    color: white;
+    font-weight: 700;
+    font-size: 1.6rem;
+    letter-spacing: -0.3px;
+    margin: 0;
+    padding: 0.5rem 0;
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    gap: 1.2rem;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-menu li {
+    margin: 0;
+    padding: 0;
+}
+
+.nav-menu li a {
+    color: rgba(255, 255, 255, 0.95);
+    text-decoration: none;
+    font-weight: 600;
+    padding: 0.6rem 1.2rem;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    display: inline-block;
+    font-size: 0.95rem;
+    position: relative;
+}
+
+.nav-menu li a:hover {
+    color: white;
+    background-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+/* Botones específicos en navbar */
+.nav-menu .btn {
+    padding: 0.6rem 1.5rem !important;
+    font-size: 0.95rem !important;
+    border-radius: 50px !important;
+    font-weight: 600 !important;
+    text-decoration: none !important;
+    transition: all 0.3s ease !important;
+}
+
+.nav-menu .btn-outline {
+    background: transparent !important;
+    border: 2px solid rgba(255, 255, 255, 0.8) !important;
+    color: white !important;
+}
+
+.nav-menu .btn-outline:hover {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-color: white !important;
+    transform: translateY(-2px) !important;
+}
+
+.nav-menu .btn-primary {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border: 2px solid rgba(255, 255, 255, 0.4) !important;
+    color: white !important;
+}
+
+.nav-menu .btn-primary:hover {
+    background: rgba(255, 255, 255, 0.3) !important;
+    border-color: white !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2) !important;
+}
+
+.nav-menu .btn-logout {
+    background: linear-gradient(135deg, #d64541 0%, #c0392b 100%) !important;
+    border: none !important;
+    color: white !important;
+    padding: 0.6rem 1.5rem !important;
+}
+
+.nav-menu .btn-logout:hover {
+    background: linear-gradient(135deg, #c0392b 0%, #a93226 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 5px 15px rgba(192, 57, 43, 0.3) !important;
+}
+
+/* ===== WELCOME MESSAGE MEJORADO ===== */
+.welcome-message {
+    background: linear-gradient(135deg, #6a89cc 0%, #4a69bd 100%);
+    border-radius: 20px;
+    padding: 3rem 2.5rem;
+    text-align: center;
+    max-width: 700px;
+    width: 100%;
+    margin: 0 auto;
+    box-shadow: 0 20px 40px rgba(74, 105, 189, 0.2);
+    position: relative;
+    overflow: hidden;
+    color: white;
+}
+
+.welcome-message::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, #78e08f 0%, #38ada9 100%);
+}
+
+.welcome-message::after {
+    content: '';
+    position: absolute;
+    top: -20%;
+    right: -10%;
+    width: 150px;
+    height: 150px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    opacity: 0.7;
+}
+
+.welcome-message h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: white;
+    font-weight: 800;
+    position: relative;
+    z-index: 1;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.welcome-message p {
+    font-size: 1.2rem;
+    opacity: 0.95;
+    position: relative;
+    z-index: 1;
+    max-width: 500px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.95);
+}
+
+/* ===== HERO SECTION MEJORADO ===== */
+.hero-section {
+    background: linear-gradient(135deg, #6a89cc 0%, #4a69bd 100%);
+    border-radius: 20px;
+    padding: 3.5rem 2.5rem;
+    text-align: center;
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto;
+    box-shadow: 0 20px 40px rgba(74, 105, 189, 0.2);
+    position: relative;
+    overflow: hidden;
+    color: white;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, #78e08f 0%, #38ada9 100%);
+}
+
+.hero-section::after {
+    content: '';
+    position: absolute;
+    top: -20%;
+    left: -10%;
+    width: 150px;
+    height: 150px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    opacity: 0.7;
+}
+
+.hero-section h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: white;
+    font-weight: 800;
+    position: relative;
+    z-index: 1;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.hero-section p {
+    font-size: 1.3rem;
+    position: relative;
+    z-index: 1;
+    max-width: 600px;
+    margin: 0 auto 3rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.95);
+    font-weight: 500;
+}
+
+/* ===== NEWS SECTION MEJORADA ===== */
+.news-section {
+    background: white;
+    border-radius: 20px;
+    padding: 3rem;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    border: 1px solid #f0f0f0;
+    position: relative;
+}
+
+.news-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 100%;
+    background: linear-gradient(to bottom, #6a89cc, #4a69bd);
+    border-radius: 20px 0 0 20px;
+}
+
+.news-section h2 {
+    text-align: center;
+    font-size: 2.2rem;
+    margin-bottom: 3rem;
+    color: #2c3e50;
+    position: relative;
+    padding-bottom: 1.2rem;
+    font-weight: 700;
+}
+
+.news-section h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(90deg, #6a89cc 0%, #4a69bd 100%);
+    border-radius: 2px;
+}
+
+.news-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+    margin-top: 1.5rem;
+}
+
+.news-card {
+    background: linear-gradient(145deg, #ffffff, #f8f9ff);
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+    border-left: 4px solid #6a89cc;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.news-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(106, 137, 204, 0.12);
+    border-left: 4px solid #4a69bd;
+}
+
+.news-card h3 {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+    color: #2c3e50;
+    font-weight: 700;
+}
+
+.news-card p {
+    color: #5a6c7d;
+    line-height: 1.7;
+    margin-bottom: 0;
+    font-size: 1rem;
+}
+
+/* ===== BOTONES MEJORADOS ===== */
+.form-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+    margin-top: 2.5rem;
+    position: relative;
+    z-index: 1;
+}
+
+.btn {
+    padding: 1rem 2.2rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    min-width: 180px;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    color: white;
+    box-shadow: 0 8px 20px rgba(52, 152, 219, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(52, 152, 219, 0.4);
+    background: linear-gradient(135deg, #2980b9 0%, #3498db 100%);
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+    color: white;
+    box-shadow: 0 8px 20px rgba(46, 204, 113, 0.3);
+}
+
+.btn-secondary:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(46, 204, 113, 0.4);
+    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+}
+
+.btn-outline {
+    background: transparent;
+    border: 2px solid white;
+    color: white;
+}
+
+.btn-outline:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.15);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 992px) {
+    .navbar {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .nav-menu {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 768px) {
+    main.container {
+        gap: 2.5rem;
+        padding: 1.5rem 1rem;
+    }
+    
+    .welcome-message,
+    .hero-section {
+        padding: 2.5rem 2rem;
+        border-radius: 15px;
+    }
+    
+    .welcome-message h2 {
+        font-size: 2rem;
+    }
+    
+    .hero-section h1 {
+        font-size: 2.2rem;
+    }
+    
+    .hero-section p {
+        font-size: 1.1rem;
+    }
+    
+    .news-section {
+        padding: 2.5rem 2rem;
+        border-radius: 15px;
+    }
+    
+    .news-section h2 {
+        font-size: 1.8rem;
+    }
+    
+    .news-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .btn {
+        width: 100%;
+        max-width: 280px;
+    }
+    
+    .nav-menu {
+        width: 100%;
+        justify-content: space-around;
+    }
+    
+    .nav-menu li a {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .welcome-message h2 {
+        font-size: 1.8rem;
+    }
+    
+    .hero-section h1 {
+        font-size: 2rem;
+    }
+    
+    .news-card {
+        padding: 1.8rem;
+    }
+    
+    .news-card h3 {
+        font-size: 1.3rem;
+    }
+    
+    .logo h2 {
+        font-size: 1.4rem;
+        text-align: center;
+    }
+}
+
+/* ===== EFECTOS ADICIONALES ===== */
+.news-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, #6a89cc 0%, #4a69bd 100%);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.news-card:hover::after {
+    transform: scaleX(1);
+}
+
+/* Animación sutil para los botones */
+@keyframes subtleFloat {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-2px);
+    }
+}
+
+.hero-section .btn-primary,
+.hero-section .btn-secondary {
+    animation: subtleFloat 3s ease-in-out infinite;
+}
+
+.welcome-message .btn-primary,
+.welcome-message .btn-secondary {
+    animation: subtleFloat 3s ease-in-out infinite;
+    animation-delay: 0.5s;
+}
+
+/* Mejorar la legibilidad */
+.hero-section p,
+.welcome-message p {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== BOTONES MEJORADOS ===== */
+.form-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+    margin-top: 2.5rem;
+    position: relative;
+    z-index: 1;
+}
+
+.btn {
+    padding: 1rem 2.2rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    min-width: 180px;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Botón primario - azul */
+.btn-primary {
+    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    color: white;
+    box-shadow: 0 8px 20px rgba(52, 152, 219, 0.3);
+    border: none;
+}
+
+.btn-primary:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(52, 152, 219, 0.4);
+    background: linear-gradient(135deg, #2980b9 0%, #3498db 100%);
+}
+
+/* Botón secundario - verde */
+.btn-secondary {
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+    color: white;
+    box-shadow: 0 8px 20px rgba(46, 204, 113, 0.3);
+    border: none;
+}
+
+.btn-secondary:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(46, 204, 113, 0.4);
+    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+}
+
+/* Botón outline - blanco transparente */
+.btn-outline {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    color: white;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.btn-outline:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: white;
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
+}
+
+/* ===== RESPONSIVE PARA BOTONES ===== */
+@media (max-width: 768px) {
+    .form-actions {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .btn {
+        width: 100%;
+        max-width: 280px;
+        padding: 0.9rem 1.5rem;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .btn {
+        padding: 0.8rem 1.2rem;
+        min-width: 160px;
+        font-size: 0.95rem;
+    }
+}
+
+/* ===== ANIMACIÓN SUTIL PARA BOTONES ===== */
+@keyframes subtleFloat {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-3px);
+    }
+}
+
+.hero-section .btn-primary,
+.hero-section .btn-secondary,
+.hero-section .btn-outline {
+    animation: subtleFloat 4s ease-in-out infinite;
+}
+
+.welcome-message .btn-primary,
+.welcome-message .btn-secondary,
+.welcome-message .btn-outline {
+    animation: subtleFloat 4s ease-in-out infinite;
+    animation-delay: 0.3s;
+}
+
+/* ===== EFECTO ESPECÍFICO PARA EL BOTÓN OUTLINE ===== */
+.btn-outline::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.7s ease;
+}
+
+.btn-outline:hover::before {
+    left: 100%;
+}
+
+/* ===== ESPACIADO CONSISTENTE ===== */
+.welcome-message .form-actions,
+.hero-section .form-actions {
+    margin-top: 2.5rem;
+    gap: 1.5rem;
+}
+
+/* ===== TEXTO DENTRO DE LOS BOTONES ===== */
+.btn span {
+    display: inline-block;
+    position: relative;
+    z-index: 1;
+}
+
+/* ===== ICONOS PARA BOTONES (OPCIONAL) ===== */
+
+
+
+
+.btn-outline::before {
+    content: '🔐';
+    margin-right: 8px;
+    font-size: 1.1em;
+}
+
+/* Reset para el pseudo-elemento animado */
+.btn-outline::before {
+    /* Esto es para el icono, el efecto de brillo se hará con otro pseudo-elemento */
+}
+
+.btn-outline::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.7s ease;
+    z-index: 0;
+}
+
+.btn-outline:hover::after {
+    left: 100%;
+}
+
+/* Asegurar que el icono sea visible */
+.btn-outline::before {
+    content: '🔐';
+    margin-right: 8px;
+    font-size: 1.1em;
+    position: relative;
+    z-index: 1;
+    left: 0 !important;
+    background: none !important;
+    width: auto !important;
+    height: auto !important;
+    transition: none !important;
+}
+.welcome-message .btn-outline {
+    background: rgba(255, 255, 255, 0.15);
+    border: 2px solid rgba(255, 255, 255, 0.9);
+    color: white;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* ===== BOTONES MEJORADOS ===== */
+.form-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+    margin-top: 2.5rem;
+    position: relative;
+    z-index: 1;
+}
+
+.btn {
+    padding: 1rem 2.2rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    min-width: 180px;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+/* Botón primario - azul */
+.btn-primary {
+    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    color: white;
+    box-shadow: 0 8px 20px rgba(52, 152, 219, 0.3);
+    border: none;
+}
+
+.btn-primary:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(52, 152, 219, 0.4);
+    background: linear-gradient(135deg, #2980b9 0%, #3498db 100%);
+}
+
+/* Botón secundario - verde */
+.btn-secondary {
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+    color: white;
+    box-shadow: 0 8px 20px rgba(46, 204, 113, 0.3);
+    border: none;
+}
+
+.btn-secondary:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(46, 204, 113, 0.4);
+    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+}
+
+/* Botón outline - blanco transparente */
+.btn-outline {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    color: white;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.btn-outline:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: white;
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
+}
+
+/* ===== ÍCONOS PARA BOTONES ===== */
+
+.btn-outline .btn-icon {
+    font-size: 1.2em;
+    transition: transform 0.3s ease;
+}
+
+/* Efecto hover para íconos */
+
+
+/* ===== EFECTO DE BRILLO PARA BOTÓN OUTLINE ===== */
+.btn-outline::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+    transition: left 0.7s ease;
+}
+
+.btn-outline:hover::before {
+    left: 100%;
+}
+
+
+
+/* ===== RESPONSIVE PARA BOTONES ===== */
+@media (max-width: 768px) {
+    .form-actions {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .btn {
+        width: 100%;
+        max-width: 280px;
+        padding: 0.9rem 1.5rem;
+        font-size: 1rem;
+    }
+    
+    .btn-icon {
+        font-size: 1.1em;
+    }
+}
+
+@media (max-width: 480px) {
+    .btn {
+        padding: 0.8rem 1.2rem;
+        min-width: 160px;
+        font-size: 0.95rem;
+        gap: 6px;
+    }
+    
+    .btn-icon {
+        font-size: 1em;
+    }
+}
+
+/* ===== ANIMACIÓN SUTIL PARA BOTONES ===== */
+@keyframes subtleFloat {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-3px);
+    }
+}
+
+.hero-section .btn,
+.welcome-message .btn {
+    animation: subtleFloat 4s ease-in-out infinite;
+}
+
+.hero-section .btn-secondary,
+.hero-section .btn-outline,
+.welcome-message .btn-secondary,
+.welcome-message .btn-outline {
+    animation-delay: 0.2s;
+}
+
+.btn-secondary.btn-with-pseudo::before {
+    content: '📋';
+}
+
+.btn-outline.btn-with-pseudo::before {
+    content: '🔐';
+}
+
+
+
+/* Reset para el efecto de brillo en outline con pseudo-elemento */
+.btn-outline.btn-with-pseudo::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+    transition: left 0.7s ease;
+}
+
+.btn-outline.btn-with-pseudo:hover::after {
+    left: 100%;
+}
+
+/* ===== BOTONES SIMPLIFICADOS Y CORREGIDOS ===== */
+.form-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+    margin-top: 2.5rem;
+    position: relative;
+    z-index: 1;
+}
+
+.btn {
+    padding: 1rem 2.2rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    min-width: 180px;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* Botón primario - azul */
+.btn-primary {
+    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    color: white;
+    box-shadow: 0 8px 20px rgba(52, 152, 219, 0.3);
+    border: none;
+}
+
+.btn-primary:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(52, 152, 219, 0.4);
+    background: linear-gradient(135deg, #2980b9 0%, #3498db 100%);
+}
+
+/* Botón secundario - verde */
+.btn-secondary {
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+    color: white;
+    box-shadow: 0 8px 20px rgba(46, 204, 113, 0.3);
+    border: none;
+}
+
+.btn-secondary:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(46, 204, 113, 0.4);
+    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+}
+
+/* Botón outline - blanco transparente */
+.btn-outline {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    color: white;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.btn-outline:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: white;
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
+}
+
+/* ===== ÍCONOS FIJOS (sin movimiento extra) ===== */
+.btn-icon {
+    font-size: 1.2em;
+    transition: transform 0.3s ease;
+    display: inline-block;
+}
+
+/* SOLUCIÓN: El botón entero se mueve, pero el ícono NO se mueve adicionalmente */
+.btn:hover .btn-icon {
+    /* Quitamos el transform adicional que causaba el problema */
+    transform: none;
+}
+
+/* ===== EFECTO DE BRILLO MEJORADO ===== */
+.btn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.7s ease;
+}
+
+.btn:hover::after {
+    left: 100%;
+}
+
+/* Para el botón outline, el brillo es más sutil */
+.btn-outline::after {
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+}
+
+/* ===== OPCIÓN 1: Íconos sin efectos especiales ===== */
+/*
+.btn .btn-icon {
+    transition: none;
+}
+*/
+
+/* ===== OPCIÓN 2: Pequeño efecto sutil en el ícono ===== */
+.btn:hover .btn-icon {
+    /* Solo un pequeño cambio de opacidad o tamaño, NO movimiento */
+    opacity: 0.9;
+    transform: scale(1.05);
+}
+
+/* ===== OPCIÓN 3: Sin íconos (la más limpia) ===== */
+/*
+.btn-icon {
+    display: none;
+}
+.btn {
+    gap: 0;
+}
+*/
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .form-actions {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .btn {
+        width: 100%;
+        max-width: 280px;
+        padding: 0.9rem 1.5rem;
+        font-size: 1rem;
+    }
+    
+    .btn-icon {
+        font-size: 1.1em;
+    }
+}
+
+@media (max-width: 480px) {
+    .btn {
+        padding: 0.8rem 1.2rem;
+        min-width: 160px;
+        font-size: 0.95rem;
+        gap: 8px;
+    }
+    
+    .btn-icon {
+        font-size: 1em;
+    }
+}
+
+.stats-grid {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    justify-content: space-between;
+    overflow-x: auto;
+    padding-bottom: 10px;
+}
+
+.stat-card {
+    flex-shrink: 0;
+    width: 18%;
+    min-width: 150px;
+    /* resto igual */
+}
+
+/* ===== ESTILOS PARA VER TICKET ===== */
+
+/* Cabecera del ticket */
+.ticket-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #dee2e6;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.ticket-title-section h1 {
+    color: #2c3e50;
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+}
+
+.ticket-title-section h2 {
+    color: #495057;
+    font-size: 1.4rem;
+    font-weight: normal;
+}
+
+.ticket-status-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-end;
+}
+
+.ticket-status-section .ticket-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* Grid de detalles del ticket */
+.ticket-details-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.ticket-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.ticket-card h3 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #dee2e6;
+}
+
+/* Información en grid */
+.info-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.info-label {
+    font-weight: 600;
+    color: #495057;
+    min-width: 150px;
+}
+
+.info-value {
+    color: #666;
+    text-align: right;
+    flex: 1;
+}
+
+/* Contenido de descripción y cierre */
+.description-content, .closure-content {
+    line-height: 1.8;
+    color: #444;
+    white-space: pre-line;
+}
+
+/* Encuesta de satisfacción */
+.rating-options {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.rating-option {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.rating-option:hover {
+    background-color: #f8f9fa;
+}
+
+.rating-label {
+    font-weight: 500;
+}
+
+/* Estilos para encuesta */
+#encuestaContainer textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    resize: vertical;
+    min-height: 100px;
+}
+
+#encuestaContainer textarea:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+}
+
+/* ===== RESPONSIVE PARA VER TICKET ===== */
+@media (max-width: 768px) {
+    .ticket-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .ticket-status-section {
+        align-items: stretch;
+    }
+    
+    .ticket-status-section .ticket-actions {
+        flex-direction: column;
+    }
+    
+    .ticket-details-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .info-item {
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+    
+    .info-label, .info-value {
+        text-align: left;
+        min-width: auto;
+    }
+    
+    .rating-options {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .ticket-title-section h1 {
+        font-size: 1.5rem;
+    }
+    
+    .ticket-title-section h2 {
+        font-size: 1.2rem;
+    }
+    
+    .ticket-card {
+        padding: 1rem;
+    }
+}
+
+.badge {
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.badge-urgent {
+    background-color: #dc3545;
+    color: white;
+}
+
+.badge-en-espera {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+.badge-en-proceso {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+}
+
+.badge-cerrado {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+/* ===== CABECERA CON BOTONES DEBAJO ===== */
+.ticket-header {
+    background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%);
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    border: 1px solid #e9ecef;
+    margin-bottom: 1rem;
+    padding: 0.8rem 1rem;
+}
+
+.ticket-title-section h1 {
+    color: #2c3e50;
+    font-size: 1.4rem;
+    margin-bottom: 0.2rem;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.ticket-title-section h2 {
+    color: #495057;
+    font-size: 1rem;
+    font-weight: 500;
+    opacity: 0.9;
+    line-height: 1.4;
+    margin-bottom: 0.8rem;
+}
+
+/* Contenedor para botones debajo del título */
+.ticket-header-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 0.8rem;
+    border-top: 1px solid #e9ecef;
+    margin-top: 0.5rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+/* Badge de estado */
+.status-badge-container .badge {
+    padding: 0.3rem 0.7rem;
+    font-size: 0.8rem;
+    border-radius: 4px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Botones alineados a la derecha */
+.ticket-header-actions .ticket-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.ticket-header-actions .ticket-actions .btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+    border-radius: 4px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.ticket-header-actions .ticket-actions .btn-sm {
+    padding: 0.35rem 0.7rem;
+    font-size: 0.75rem;
+}
+
+.ticket-header-actions .ticket-actions .btn-secondary {
+    background: #6c757d;
+    color: white;
+    border: none;
+}
+
+.ticket-header-actions .ticket-actions .btn-secondary:hover {
+    background: #545b62;
+    transform: translateY(-1px);
+}
+
+.ticket-header-actions .ticket-actions .btn-success {
+    background: #28a745;
+    color: white;
+    border: none;
+}
+
+.ticket-header-actions .ticket-actions .btn-success:hover {
+    background: #1e7e34;
+    transform: translateY(-1px);
+}
+
+.ticket-header-actions .ticket-actions .btn-icon {
+    font-size: 0.9em;
+    display: inline-block;
+}
+
+/* Badge urgente junto al título */
+.badge-urgent {
+    padding: 0.2rem 0.5rem;
+    font-size: 0.7rem;
+    background-color: #dc3545;
+    color: white;
+    border-radius: 3px;
+    margin-left: 0.5rem;
+    vertical-align: middle;
+    font-weight: 600;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .ticket-header {
+        padding: 0.6rem;
+    }
+    
+    .ticket-title-section h1 {
+        font-size: 1.2rem;
+    }
+    
+    .ticket-title-section h2 {
+        font-size: 0.9rem;
+    }
+    
+    .ticket-header-actions {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.8rem;
+    }
+    
+    .status-badge-container {
+        text-align: center;
+        margin-bottom: 0.3rem;
+    }
+    
+    .ticket-header-actions .ticket-actions {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .ticket-header-actions .ticket-actions .btn {
+        flex: 1;
+        min-width: 120px;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .ticket-header-actions .ticket-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .ticket-header-actions .ticket-actions .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* ===== ESTILOS PARA CREAR TICKET ===== */
+
+/* Formulario de creación */
+.form-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.form-container h2 {
+    color: #2c3e50;
+    margin-bottom: 1rem;
+    text-align: center;
+    font-size: 1.8rem;
+}
+
+.user-info-text {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #666;
+    font-size: 0.95rem;
+}
+
+/* Grupos de formulario */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #495057;
+    font-size: 0.95rem;
+}
+
+.form-group input[type="text"],
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 120px;
+    font-family: inherit;
+}
+
+/* Placeholders */
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: #adb5bd;
+    font-size: 0.9rem;
+}
+
+/* Toggle de urgencia */
+.urgent-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 5px;
+}
+
+.urgent-label {
+    font-weight: 600;
+    color: #856404;
+    display: block;
+    margin-bottom: 0.25rem;
+    font-size: 0.95rem;
+}
+
+.urgent-note {
+    font-size: 0.85rem;
+    color: #666;
+    line-height: 1.4;
+}
+
+/* Switch toggle */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+    flex-shrink: 0;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+    background-color: #dc3545;
+}
+
+input:checked + .toggle-slider:before {
+    transform: translateX(26px);
+}
+
+/* Acciones del formulario */
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+.form-actions .btn {
+    flex: 1;
+    min-width: 120px;
+    text-align: center;
+    padding: 0.75rem 1.5rem;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+/* Botón primario */
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+/* Botón secundario */
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #545b62;
+    transform: translateY(-2px);
+}
+
+/* Botón outline */
+.btn-outline {
+    background-color: transparent;
+    border: 2px solid #007bff;
+    color: #007bff;
+}
+
+.btn-outline:hover {
+    background-color: #007bff;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Botón logout */
+.btn-logout {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-logout:hover {
+    background-color: #c82333;
+}
+
+/* Mensajes de error */
+.error-message {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+    padding: 1rem;
+    border-radius: 5px;
+    margin-bottom: 1.5rem;
+}
+
+.error-message ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.error-message li {
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.error-message li:before {
+    content: "⚠";
+    position: absolute;
+    left: 0;
+    font-size: 1rem;
+}
+
+/* Select estilizado */
+.form-group select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236c757d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1.2em;
+    padding-right: 3rem;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .form-container {
+        padding: 1.5rem;
+        margin: 1rem auto;
+    }
+    
+    .urgent-toggle {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+    }
+    
+    .toggle-switch {
+        margin-top: 0.5rem;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .form-actions .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-container {
+        padding: 1rem;
+    }
+    
+    .form-container h2 {
+        font-size: 1.5rem;
+    }
+    
+    .user-info-text {
+        font-size: 0.9rem;
+    }
+    
+    .form-group input[type="text"],
+    .form-group select,
+    .form-group textarea {
+        padding: 0.6rem;
+        font-size: 0.95rem;
+    }
+    
+    .form-actions .btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+    }
+}

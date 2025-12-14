@@ -80,7 +80,8 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mis Tickets - HelpDesk</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <!-- NO pongas <style> aquí si ya tienes un archivo CSS externo -->
 </head>
 <body>
     <header class="header">
@@ -138,7 +139,7 @@ try {
         <!-- Acciones -->
         <div class="action-buttons">
             <a href="crear_ticket.php" class="btn btn-primary">
-                <span class="btn-icon">+</span> Crear Nuevo Ticket
+                <span class="btn-icon">➕</span> Crear Nuevo Ticket
             </a>
             <a href="index.php" class="btn btn-secondary">Volver al Inicio</a>
         </div>
