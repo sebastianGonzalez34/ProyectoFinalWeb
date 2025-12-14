@@ -139,20 +139,20 @@ $user_nombre = isset($_SESSION['user_nombre']) ? htmlspecialchars($_SESSION['use
             
             <form method="POST" action="">
                 <div class="form-group">
-                    <label for="titulo">Título del Ticket *</label>
+                    <label for="titulo">Título del Ticket</label>
                     <input type="text" id="titulo" name="titulo" 
                            value="<?php echo isset($_POST['titulo']) ? htmlspecialchars($_POST['titulo']) : ''; ?>" 
                            required maxlength="255" placeholder="Describa brevemente el problema">
                 </div>
                 
                 <div class="form-group">
-                    <label for="descripcion">Descripción Detallada *</label>
+                    <label for="descripcion">Descripción Detallada</label>
                     <textarea id="descripcion" name="descripcion" rows="6" 
                               required placeholder="Describa el problema en detalle, incluyendo pasos para reproducirlo, mensajes de error, etc."><?php echo isset($_POST['descripcion']) ? htmlspecialchars($_POST['descripcion']) : ''; ?></textarea>
                 </div>
                 
                 <div class="form-group">
-                    <label for="id_categoria">Categoría *</label>
+                    <label for="id_categoria">Categoría</label>
                     <select id="id_categoria" name="id_categoria" required>
                         <option value="">Seleccione una categoría</option>
                         <?php foreach ($categorias as $categoria): ?>

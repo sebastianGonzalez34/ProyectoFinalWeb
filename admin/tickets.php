@@ -3,20 +3,19 @@ require_once '../includes/config.php';
 require_once '../includes/database.php';
 require_once '../includes/auth.php';
 require_once '../includes/sanitize.php';
-require_once '../includes/Ticket.php';
 
 $database = new Database();
 $db = $database->getConnection();
 $auth = new Auth($db);
 $auth->redirectIfNotLogged('admin');
 
-// Instanciar ticket
-$ticket = new Ticket($db);
+// Instanciar sanitize
+$sanitize = new Sanitize();
 
 // Asignar agente a ticket
 if (isset($_POST['asignar_agente'])) {
-    $ticket_id = Sanitize::cleanInput($_POST['ticket_id']);
-    $agente_id = Sanitize::cleanInput($_POST['agente_id']);
+    $ticket_id = $sanitize->cleanInput($_POST['ticket_id']);
+    $agente_id = $sanitize->cleanInput($_POST['agente_id']);
     
     $stmt = $db->prepare("UPDATE tickets SET id_agente_asignado = ?, estado = 'En proceso' WHERE id_ticket = ?");
     $stmt->execute([$agente_id, $ticket_id]);
@@ -25,8 +24,8 @@ if (isset($_POST['asignar_agente'])) {
 
 // Cerrar ticket
 if (isset($_POST['cerrar_ticket'])) {
-    $ticket_id = Sanitize::cleanInput($_POST['ticket_id']);
-    $comentario = Sanitize::cleanInput($_POST['comentario_cierre']);
+    $ticket_id = $sanitize->cleanInput($_POST['ticket_id']);
+    $comentario = $sanitize->cleanInput($_POST['comentario_cierre']);
     
     $stmt = $db->prepare("UPDATE tickets SET estado = 'Cerrado', comentario_cierre = ?, fecha_cierre = NOW(), tiempo_esperado = TIMEDIFF(NOW(), fecha_creacion) WHERE id_ticket = ?");
     $stmt->execute([$comentario, $ticket_id]);
@@ -38,20 +37,30 @@ $agentes = $db->query("SELECT id_usuario, username FROM usuarios WHERE rol = 'ag
 
 // Ver ticket específico
 $ticket_detalle = null;
+$encuesta_ticket = null;
 if (isset($_GET['action']) && $_GET['action'] == 'view' && isset($_GET['id'])) {
+    $ticket_id = $sanitize->cleanInput($_GET['id']);
+    
     $stmt = $db->prepare("SELECT t.*, c.*, cat.nombre as categoria_nombre, u.username as agente_asignado 
                          FROM tickets t 
                          LEFT JOIN colaboradores c ON t.id_colaborador = c.id_colaborador 
                          LEFT JOIN categorias_ticket cat ON t.id_categoria = cat.id_categoria 
                          LEFT JOIN usuarios u ON t.id_agente_asignado = u.id_usuario 
                          WHERE t.id_ticket = ?");
-    $stmt->execute([$_GET['id']]);
+    $stmt->execute([$ticket_id]);
     $ticket_detalle = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    // Obtener encuesta si existe
+    if ($ticket_detalle && $ticket_detalle['estado'] == 'Cerrado') {
+        $encuesta_stmt = $db->prepare("SELECT * FROM encuestas_satisfaccion WHERE id_ticket = ?");
+        $encuesta_stmt->execute([$ticket_id]);
+        $encuesta_ticket = $encuesta_stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }
 
 // Paginación
 $records_per_page = 10;
-$page = isset($_GET['page']) ? $_GET['page'] : 1;
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $from_record_num = ($records_per_page * $page) - $records_per_page;
 
 // Obtener tickets
@@ -61,7 +70,14 @@ $query = "SELECT t.*, c.primer_nombre, c.primer_apellido, cat.nombre as categori
           LEFT JOIN colaboradores c ON t.id_colaborador = c.id_colaborador 
           LEFT JOIN categorias_ticket cat ON t.id_categoria = cat.id_categoria 
           LEFT JOIN usuarios u ON t.id_agente_asignado = u.id_usuario 
-          ORDER BY t.estado, t.fecha_creacion DESC 
+          ORDER BY 
+            CASE t.estado 
+                WHEN 'En espera' THEN 1
+                WHEN 'En proceso' THEN 2
+                WHEN 'Cerrado' THEN 3
+                ELSE 4
+            END,
+            t.fecha_creacion DESC 
           LIMIT ?, ?";
 $stmt = $db->prepare($query);
 $stmt->bindParam(1, $from_record_num, PDO::PARAM_INT);
@@ -79,7 +95,7 @@ $total_pages = ceil($total_rows / $records_per_page);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tickets - HelpDesk</title>
-    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
     <?php 
@@ -91,23 +107,23 @@ $total_pages = ceil($total_rows / $records_per_page);
         <h1>Gestión de Tickets - Administrador</h1>
 
         <?php if (isset($success)): ?>
-            <div class="alert alert-success"><?php echo $success; ?></div>
+            <div class="success-message"><?php echo $success; ?></div>
         <?php endif; ?>
 
         <?php if ($ticket_detalle): ?>
             <!-- Detalle del Ticket -->
-            <div class="ticket-detail" style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 2rem;">
+            <div class="ticket-detail">
                 <h2>Detalle del Ticket #<?php echo $ticket_detalle['id_ticket']; ?></h2>
                 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
-                    <div>
+                <div class="info-grid">
+                    <div class="info-section">
                         <h3>Información del Solicitante</h3>
                         <p><strong>Nombre:</strong> <?php echo htmlspecialchars($ticket_detalle['primer_nombre'] . ' ' . $ticket_detalle['primer_apellido']); ?></p>
                         <p><strong>Cédula:</strong> <?php echo htmlspecialchars($ticket_detalle['identificacion']); ?></p>
                         <p><strong>Email:</strong> <?php echo htmlspecialchars($ticket_detalle['email']); ?></p>
                     </div>
                     
-                    <div>
+                    <div class="info-section">
                         <h3>Información del Ticket</h3>
                         <p><strong>Categoría:</strong> <?php echo htmlspecialchars($ticket_detalle['categoria_nombre']); ?></p>
                         <p><strong>Estado:</strong> 
@@ -124,26 +140,73 @@ $total_pages = ceil($total_rows / $records_per_page);
                     </div>
                 </div>
 
-                <div style="margin-bottom: 2rem;">
+                <div class="description-section">
                     <h3>Descripción del Problema</h3>
                     <p><?php echo nl2br(htmlspecialchars($ticket_detalle['descripcion'])); ?></p>
                 </div>
 
                 <?php if ($ticket_detalle['comentario_cierre']): ?>
-                <div style="margin-bottom: 2rem;">
+                <div class="closure-section">
                     <h3>Solución Aplicada</h3>
                     <p><?php echo nl2br(htmlspecialchars($ticket_detalle['comentario_cierre'])); ?></p>
+                </div>
+                <?php endif; ?>
+
+                <!-- ENCUESTA DE SATISFACCIÓN -->
+                <?php if ($ticket_detalle['estado'] == 'Cerrado'): ?>
+                <div class="encuesta-container">
+                    <div class="encuesta-header">
+                        📊 Encuesta de Satisfacción
+                    </div>
+                    
+                    <?php if ($encuesta_ticket): ?>
+                        <div class="encuesta-content">
+                            <div class="encuesta-item">
+                                <strong>Nivel de Satisfacción:</strong>
+                                <div class="satisfaccion-<?php echo strtolower(str_replace(' ', '-', $encuesta_ticket['nivel_satisfaccion'])); ?>">
+                                    <?php 
+                                    $icono = '';
+                                    if ($encuesta_ticket['nivel_satisfaccion'] == 'Conforme') {
+                                        $icono = '✅';
+                                    } elseif ($encuesta_ticket['nivel_satisfaccion'] == 'Inconforme') {
+                                        $icono = '❌';
+                                    } else {
+                                        $icono = '⚠️';
+                                    }
+                                    echo $icono . ' ' . htmlspecialchars($encuesta_ticket['nivel_satisfaccion']);
+                                    ?>
+                                </div>
+                            </div>
+                            
+                            <div class="encuesta-item">
+                                <strong>Fecha de Encuesta:</strong>
+                                <p><?php echo date('d/m/Y H:i', strtotime($encuesta_ticket['fecha_encuesta'])); ?></p>
+                            </div>
+                        </div>
+                        
+                        <?php if (!empty($encuesta_ticket['comentario'])): ?>
+                        <div class="encuesta-comentario">
+                            <strong>Comentario del Usuario:</strong>
+                            <p><?php echo nl2br(htmlspecialchars($encuesta_ticket['comentario'])); ?></p>
+                        </div>
+                        <?php endif; ?>
+                    <?php else: ?>
+                        <div class="encuesta-empty">
+                            <p>📝 El usuario aún no ha completado la encuesta de satisfacción.</p>
+                            <small>La encuesta estará disponible una vez que el usuario la complete.</small>
+                        </div>
+                    <?php endif; ?>
                 </div>
                 <?php endif; ?>
 
                 <!-- Formularios de acción para admin -->
                 <?php if ($ticket_detalle['estado'] != 'Cerrado'): ?>
                     <?php if (!$ticket_detalle['id_agente_asignado']): ?>
-                        <form method="POST" style="margin-bottom: 1rem;">
+                        <form method="POST" class="assign-form">
                             <input type="hidden" name="ticket_id" value="<?php echo $ticket_detalle['id_ticket']; ?>">
                             <div class="form-group">
                                 <label for="agente_id">Asignar Agente:</label>
-                                <select class="form-control" id="agente_id" name="agente_id" required style="display: inline-block; width: auto;">
+                                <select id="agente_id" name="agente_id" required>
                                     <option value="">Seleccionar agente</option>
                                     <?php foreach($agentes as $agente): ?>
                                         <option value="<?php echo $agente['id_usuario']; ?>"><?php echo htmlspecialchars($agente['username']); ?></option>
@@ -153,18 +216,18 @@ $total_pages = ceil($total_rows / $records_per_page);
                             <button type="submit" name="asignar_agente" class="btn btn-primary">Asignar Agente</button>
                         </form>
                     <?php else: ?>
-                        <form method="POST">
+                        <form method="POST" class="close-form">
                             <input type="hidden" name="ticket_id" value="<?php echo $ticket_detalle['id_ticket']; ?>">
                             <div class="form-group">
                                 <label for="comentario_cierre">Comentario de Cierre *</label>
-                                <textarea class="form-control" id="comentario_cierre" name="comentario_cierre" rows="4" required placeholder="Describa cómo se solucionó el problema..."></textarea>
+                                <textarea id="comentario_cierre" name="comentario_cierre" rows="4" required placeholder="Describa cómo se solucionó el problema..."></textarea>
                             </div>
                             <button type="submit" name="cerrar_ticket" class="btn btn-success">Cerrar Ticket</button>
                         </form>
                     <?php endif; ?>
                 <?php endif; ?>
 
-                <a href="tickets.php" class="btn btn-secondary" style="margin-top: 1rem;">Volver a la lista</a>
+                <a href="tickets.php" class="btn btn-secondary">Volver a la lista</a>
             </div>
         <?php endif; ?>
 
@@ -201,17 +264,19 @@ $total_pages = ceil($total_rows / $records_per_page);
                             </td>
                             <td><?php echo $ticket['agente_asignado'] ?: 'Sin asignar'; ?></td>
                             <td><?php echo date('d/m/Y H:i', strtotime($ticket['fecha_creacion'])); ?></td>
-                            <td>
-                                <a href="tickets.php?action=view&id=<?php echo $ticket['id_ticket']; ?>" class="btn btn-primary btn-sm">Ver</a>
+                            <td class="ticket-actions">
+                                <a href="tickets.php?action=view&id=<?php echo $ticket['id_ticket']; ?>" class="btn-view">Ver</a>
                                 <?php if (!$ticket['id_agente_asignado'] && $ticket['estado'] != 'Cerrado'): ?>
-                                    <a href="tickets.php?action=view&id=<?php echo $ticket['id_ticket']; ?>#asignar" class="btn btn-warning btn-sm">Asignar</a>
+                                    <a href="tickets.php?action=view&id=<?php echo $ticket['id_ticket']; ?>#asignar" class="btn-assign">Asignar</a>
                                 <?php endif; ?>
                             </td>
                         </tr>
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="8" style="text-align: center;">No hay tickets</td>
+                            <td colspan="8" class="empty-state">
+                                No hay tickets registrados
+                            </td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
@@ -220,13 +285,32 @@ $total_pages = ceil($total_rows / $records_per_page);
 
         <!-- Paginación -->
         <?php if ($total_pages > 1): ?>
-        <ul class="pagination">
-            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                <li class="<?php echo $i == $page ? 'active' : ''; ?>">
-                    <a href="tickets.php?page=<?php echo $i; ?>"><?php echo $i; ?></a>
-                </li>
-            <?php endfor; ?>
-        </ul>
+        <div class="pagination-container">
+            <div class="pagination">
+                <?php if ($page > 1): ?>
+                    <a href="tickets.php?page=<?php echo $page - 1; ?>" class="page-link">
+                        &laquo; Anterior
+                    </a>
+                <?php endif; ?>
+                
+                <?php 
+                $start_page = max(1, $page - 2);
+                $end_page = min($total_pages, $page + 2);
+                
+                for ($i = $start_page; $i <= $end_page; $i++): ?>
+                    <a href="tickets.php?page=<?php echo $i; ?>" 
+                       class="page-link <?php echo $i == $page ? 'active' : ''; ?>">
+                        <?php echo $i; ?>
+                    </a>
+                <?php endfor; ?>
+                
+                <?php if ($page < $total_pages): ?>
+                    <a href="tickets.php?page=<?php echo $page + 1; ?>" class="page-link">
+                        Siguiente &raquo;
+                    </a>
+                <?php endif; ?>
+            </div>
+        </div>
         <?php endif; ?>
     </div>
 </body>

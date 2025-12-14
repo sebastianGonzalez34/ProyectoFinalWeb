@@ -56,13 +56,26 @@ if (isset($_GET['export'])) {
     header('Content-Type: application/vnd.ms-excel');
     header('Content-Disposition: attachment; filename="reporte_tickets_' . date('Y-m-d') . '.xls"');
     
-    $export_query = "SELECT t.*, c.primer_nombre, c.primer_apellido, c.identificacion, cat.nombre as categoria_nombre,
-                    u.username as agente_asignado, TIMESTAMPDIFF(HOUR, t.fecha_creacion, t.fecha_cierre) as horas_resolucion
-                    FROM tickets t
-                    LEFT JOIN colaboradores c ON t.id_colaborador = c.id_colaborador
-                    LEFT JOIN categorias_ticket cat ON t.id_categoria = cat.id_categoria
-                    LEFT JOIN usuarios u ON t.id_agente_asignado = u.id_usuario
-                    WHERE DATE(t.fecha_creacion) BETWEEN ? AND ?";
+    // Consulta mejorada que incluye datos de encuesta de satisfacción
+    $export_query = "SELECT 
+        t.*, 
+        c.primer_nombre, 
+        c.primer_apellido, 
+        c.identificacion, 
+        c.email,
+        cat.nombre as categoria_nombre,
+        u.username as agente_asignado, 
+        TIMESTAMPDIFF(HOUR, t.fecha_creacion, t.fecha_cierre) as horas_resolucion,
+        es.nivel_satisfaccion,
+        es.comentario as comentario_encuesta,
+        es.fecha_encuesta
+    FROM tickets t
+    LEFT JOIN colaboradores c ON t.id_colaborador = c.id_colaborador
+    LEFT JOIN categorias_ticket cat ON t.id_categoria = cat.id_categoria
+    LEFT JOIN usuarios u ON t.id_agente_asignado = u.id_usuario
+    LEFT JOIN encuestas_satisfaccion es ON t.id_ticket = es.id_ticket
+    WHERE DATE(t.fecha_creacion) BETWEEN ? AND ?";
+    
     $export_params = [$fecha_desde, $fecha_hasta];
     
     if ($categoria) {
@@ -78,18 +91,39 @@ if (isset($_GET['export'])) {
     $export_stmt->execute($export_params);
     $tickets_export = $export_stmt->fetchAll(PDO::FETCH_ASSOC);
     
-    echo "ID\tTítulo\tSolicitante\tCédula\tCategoría\tEstado\tAgente\tFecha Creación\tFecha Cierre\tHoras Resolución\n";
+    // Encabezados del Excel incluyendo encuesta
+    echo "ID\t";
+    echo "Título\t";
+    echo "Solicitante\t";
+    echo "Cédula\t";
+    echo "Email\t";
+    echo "Categoría\t";
+    echo "Estado\t";
+    echo "Agente\t";
+    echo "Fecha Creación\t";
+    echo "Fecha Cierre\t";
+    echo "Horas Resolución\t";
+    echo "Nivel Satisfacción\t";
+    echo "Comentario Encuesta\t";
+    echo "Fecha Encuesta\t";
+    echo "Solución Aplicada\n";
+    
     foreach ($tickets_export as $ticket) {
         echo $ticket['id_ticket'] . "\t";
         echo $ticket['titulo'] . "\t";
         echo $ticket['primer_nombre'] . ' ' . $ticket['primer_apellido'] . "\t";
         echo $ticket['identificacion'] . "\t";
+        echo $ticket['email'] . "\t";
         echo $ticket['categoria_nombre'] . "\t";
         echo $ticket['estado'] . "\t";
         echo $ticket['agente_asignado'] . "\t";
-        echo $ticket['fecha_creacion'] . "\t";
-        echo $ticket['fecha_cierre'] . "\t";
-        echo $ticket['horas_resolucion'] . "\n";
+        echo date('d/m/Y H:i', strtotime($ticket['fecha_creacion'])) . "\t";
+        echo ($ticket['fecha_cierre'] ? date('d/m/Y H:i', strtotime($ticket['fecha_cierre'])) : 'N/A') . "\t";
+        echo ($ticket['horas_resolucion'] ? $ticket['horas_resolucion'] . ' horas' : 'N/A') . "\t";
+        echo ($ticket['nivel_satisfaccion'] ? $ticket['nivel_satisfaccion'] : 'No completada') . "\t";
+        echo ($ticket['comentario_encuesta'] ? str_replace(["\r\n", "\n", "\r", "\t"], " ", $ticket['comentario_encuesta']) : 'Sin comentario') . "\t";
+        echo ($ticket['fecha_encuesta'] ? date('d/m/Y H:i', strtotime($ticket['fecha_encuesta'])) : 'N/A') . "\t";
+        echo ($ticket['comentario_cierre'] ? str_replace(["\r\n", "\n", "\r", "\t"], " ", $ticket['comentario_cierre']) : 'Sin solución registrada') . "\n";
     }
     exit;
 }
@@ -189,17 +223,64 @@ if (isset($_GET['export'])) {
         </div>
 
         <!-- Gráfico de categorías -->
-        <div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-top: 2rem;">
+        <div class="categorias-container">
             <h2>Tickets por Categoría</h2>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+            <div class="categorias-grid">
                 <?php foreach($tickets_por_categoria as $cat): ?>
-                <div style="text-align: center; padding: 1rem; border: 1px solid #ddd; border-radius: 8px;">
-                    <h3 style="color: #667eea; margin-bottom: 0.5rem;"><?php echo $cat['total']; ?></h3>
-                    <p style="color: #666;"><?php echo $cat['nombre']; ?></p>
+                <div class="categoria-item">
+                    <h3><?php echo $cat['total']; ?></h3>
+                    <p><?php echo $cat['nombre']; ?></p>
                 </div>
                 <?php endforeach; ?>
             </div>
         </div>
+        
+        <!-- Estadísticas de satisfacción -->
+        <?php
+        // Obtener estadísticas de satisfacción
+        $satisfaccion_query = "SELECT 
+            COUNT(*) as total_encuestas,
+            COUNT(CASE WHEN nivel_satisfaccion = 'Conforme' THEN 1 END) as conformes,
+            COUNT(CASE WHEN nivel_satisfaccion = 'Inconforme' THEN 1 END) as inconformes,
+            COUNT(CASE WHEN nivel_satisfaccion = 'Neutral' THEN 1 END) as neutrales
+            FROM encuestas_satisfaccion es
+            INNER JOIN tickets t ON es.id_ticket = t.id_ticket
+            WHERE DATE(t.fecha_creacion) BETWEEN ? AND ?";
+        
+        $satisfaccion_stmt = $db->prepare($satisfaccion_query);
+        $satisfaccion_stmt->execute([$fecha_desde, $fecha_hasta]);
+        $estadisticas_satisfaccion = $satisfaccion_stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($estadisticas_satisfaccion['total_encuestas'] > 0):
+        ?>
+        <div class="stats-grid" style="margin-top: 2rem;">
+            <div class="stat-card">
+                <div class="stat-number"><?php echo $estadisticas_satisfaccion['total_encuestas']; ?></div>
+                <div class="stat-label">Encuestas Completadas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number"><?php echo $estadisticas_satisfaccion['conformes']; ?></div>
+                <div class="stat-label">Conformes</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number"><?php echo $estadisticas_satisfaccion['inconformes']; ?></div>
+                <div class="stat-label">Inconformes</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">
+                    <?php 
+                    if ($estadisticas_satisfaccion['total_encuestas'] > 0) {
+                        $porcentaje = ($estadisticas_satisfaccion['conformes'] / $estadisticas_satisfaccion['total_encuestas']) * 100;
+                        echo round($porcentaje, 1) . '%';
+                    } else {
+                        echo '0%';
+                    }
+                    ?>
+                </div>
+                <div class="stat-label">Satisfacción</div>
+            </div>
+        </div>
+        <?php endif; ?>
     </div>
 </body>
 </html>
