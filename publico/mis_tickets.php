@@ -200,9 +200,6 @@ try {
                                             Ver
                                         </a>
                                         <?php if ($ticket['estado'] == 'Cerrado'): ?>
-                                            <a href="#" class="btn-survey" onclick="alert('Encuesta de satisfacción disponible');">
-                                                Encuesta
-                                            </a>
                                         <?php endif; ?>
                                     </td>
                                 </tr>
