@@ -3,6 +3,11 @@ require_once '../includes/config.php';
 require_once '../includes/database.php';
 require_once '../includes/sanitize.php';
 
+// Iniciar sesión si no está iniciada
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 // Verificar si el usuario está logueado
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
@@ -10,7 +15,13 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $sanitize = new Sanitize();
+
+// IMPORTANTE: Verifica qué está en $_SESSION['user_id']
+// Si es 'id' en lugar de 'id_colaborador', necesitamos ajustar
 $user_id = $_SESSION['user_id'];
+
+// Para debug (puedes eliminar esto después)
+// echo "DEBUG: user_id en sesión: " . $user_id . "<br>";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $current_password = $_POST['current_password'] ?? '';
@@ -39,7 +50,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $db = $database->getConnection();
             
             // Obtener la contraseña actual del usuario
-            $query = "SELECT password FROM usuarios WHERE id = :id";
+            // Verificamos si el user_id es numérico (podría ser el id_colaborador)
+            $query = "SELECT password FROM colaboradores WHERE id_colaborador = :id";
             $stmt = $db->prepare($query);
             $stmt->bindParam(':id', $user_id, PDO::PARAM_INT);
             $stmt->execute();
@@ -52,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     // Actualizar contraseña
                     $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
                     
-                    $query = "UPDATE usuarios SET password = :password WHERE id = :id";
+                    $query = "UPDATE colaboradores SET password = :password WHERE id_colaborador = :id";
                     $stmt = $db->prepare($query);
                     $stmt->bindParam(':password', $hashed_password);
                     $stmt->bindParam(':id', $user_id, PDO::PARAM_INT);
@@ -66,15 +78,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $errores[] = "La contraseña actual es incorrecta";
                 }
             } else {
-                $errores[] = "Usuario no encontrado";
+                // Intentar buscar por username si id_colaborador no funciona
+                $errores[] = "Usuario no encontrado (ID: $user_id)";
+                
+                // DEBUG: Mostrar consulta para verificar
+                // $errores[] = "Consulta: SELECT password FROM colaboradores WHERE id_colaborador = $user_id";
             }
         } catch(PDOException $exception) {
             $errores[] = "Error de base de datos: " . $exception->getMessage();
+            
+            // Para debug más detallado
+            // $errores[] = "Query que falló: SELECT password FROM colaboradores WHERE id_colaborador = :id";
+            // $errores[] = "user_id value: " . $user_id;
         }
     }
 }
 
-$nombre_usuario = $sanitize->cleanInput($_SESSION['user_nombre'] . ' ' . $_SESSION['user_apellido']);
+// Obtener nombre del usuario
+$nombre_usuario = '';
+try {
+    $database = new Database();
+    $db = $database->getConnection();
+    $query = "SELECT primer_nombre, primer_apellido FROM colaboradores WHERE id_colaborador = :id";
+    $stmt = $db->prepare($query);
+    $stmt->bindParam(':id', $user_id, PDO::PARAM_INT);
+    $stmt->execute();
+    
+    if ($stmt->rowCount() === 1) {
+        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+        $nombre_usuario = $sanitize->cleanInput($usuario['primer_nombre'] . ' ' . $usuario['primer_apellido']);
+    } else {
+        // Si no encuentra por id_colaborador, intentar por username
+        if (isset($_SESSION['user_nombre'])) {
+            $query = "SELECT primer_nombre, primer_apellido FROM colaboradores WHERE username = :username";
+            $stmt = $db->prepare($query);
+            $username = $_SESSION['user_nombre'];
+            $stmt->bindParam(':username', $username);
+            $stmt->execute();
+            
+            if ($stmt->rowCount() === 1) {
+                $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+                $nombre_usuario = $sanitize->cleanInput($usuario['primer_nombre'] . ' ' . $usuario['primer_apellido']);
+            }
+        }
+    }
+} catch(PDOException $exception) {
+    $nombre_usuario = "Usuario";
+    // No mostrar error aquí para no confundir al usuario
+}
 ?>
 
 <!DOCTYPE html>
@@ -104,6 +155,14 @@ $nombre_usuario = $sanitize->cleanInput($_SESSION['user_nombre'] . ' ' . $_SESSI
     <div class="container">
         <div class="form-container" style="max-width: 600px; margin: 3rem auto;">
             <h2 style="text-align: center; margin-bottom: 2rem;">Cambiar Contraseña</h2>
+            
+            <!-- Para debug (puedes eliminar esto después) -->
+            <?php if (isset($user_id)): ?>
+            <p style="text-align: center; margin-bottom: 1rem; color: #999; font-size: 0.9rem;">
+                ID de usuario en sesión: <?php echo htmlspecialchars($user_id); ?>
+            </p>
+            <?php endif; ?>
+            
             <p style="text-align: center; margin-bottom: 2rem; color: #666;">
                 Usuario: <strong><?php echo $nombre_usuario; ?></strong>
             </p>

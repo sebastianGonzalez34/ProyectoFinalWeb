@@ -81,7 +81,6 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mis Tickets - HelpDesk</title>
     <link rel="stylesheet" href="/css/styles.css">
-    <!-- NO pongas <style> aquí si ya tienes un archivo CSS externo -->
 </head>
 <body>
     <header class="header">
@@ -108,29 +107,29 @@ try {
             </p>
         </div>
 
-        <!-- Estadísticas -->
-        <div class="stats-grid">
-            <div class="stat-card">
+        <!-- Estadísticas EN HORIZONTAL -->
+        <div class="stats-horizontal">
+            <div class="stat-item">
                 <div class="stat-number"><?php echo $estadisticas['total']; ?></div>
                 <div class="stat-label">Total de Tickets</div>
             </div>
             
-            <div class="stat-card stat-waiting">
+            <div class="stat-item stat-item-waiting">
                 <div class="stat-number"><?php echo $estadisticas['en_espera']; ?></div>
                 <div class="stat-label">En Espera</div>
             </div>
             
-            <div class="stat-card stat-process">
+            <div class="stat-item stat-item-process">
                 <div class="stat-number"><?php echo $estadisticas['en_proceso']; ?></div>
                 <div class="stat-label">En Proceso</div>
             </div>
             
-            <div class="stat-card stat-closed">
+            <div class="stat-item stat-item-closed">
                 <div class="stat-number"><?php echo $estadisticas['cerrados']; ?></div>
                 <div class="stat-label">Cerrados</div>
             </div>
             
-            <div class="stat-card stat-urgent">
+            <div class="stat-item stat-item-urgent">
                 <div class="stat-number"><?php echo $estadisticas['urgentes']; ?></div>
                 <div class="stat-label">Urgentes</div>
             </div>
@@ -162,6 +161,7 @@ try {
                     <a href="crear_ticket.php" class="btn btn-primary">Crear Primer Ticket</a>
                 </div>
             <?php else: ?>
+                <!-- Tabla de tickets -->
                 <div class="tickets-table-container">
                     <table class="tickets-table">
                         <thead>
@@ -199,8 +199,6 @@ try {
                                         <a href="ver_ticket.php?id=<?php echo $ticket['id_ticket']; ?>" class="btn-view">
                                             Ver
                                         </a>
-                                        <?php if ($ticket['estado'] == 'Cerrado'): ?>
-                                        <?php endif; ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

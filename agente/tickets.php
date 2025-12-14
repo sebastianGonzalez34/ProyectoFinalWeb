@@ -139,7 +139,7 @@ $total_pages = ceil($total_rows / $records_per_page);
                         <form method="POST">
                             <input type="hidden" name="ticket_id" value="<?php echo $ticket_detalle['id_ticket']; ?>">
                             <div class="form-group">
-                                <label for="comentario_cierre">Comentario de Cierre *</label>
+                                <label for="comentario_cierre">Comentario de Cierre</label>
                                 <textarea class="form-control" id="comentario_cierre" name="comentario_cierre" rows="4" required placeholder="Describa cómo se solucionó el problema..."></textarea>
                             </div>
                             <button type="submit" name="cerrar_ticket" class="btn btn-success">Cerrar Ticket</button>

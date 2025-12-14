@@ -5842,3 +5842,67 @@ input:checked + .toggle-slider:before {
         max-width: 100%;
     }
 }
+
+/* Estadísticas horizontales */
+.stats-horizontal {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    margin: 30px 0;
+    flex-wrap: wrap;
+}
+
+.stat-item {
+    flex: 1;
+    min-width: 180px;
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border: 1px solid #e0e0e0;
+}
+
+.stat-item .stat-number {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.stat-item .stat-label {
+    font-size: 14px;
+    color: #666;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Colores para cada tipo de estadística */
+.stat-item-waiting .stat-number {
+    color: #ffc107; /* Amarillo para En Espera */
+}
+
+.stat-item-process .stat-number {
+    color: #17a2b8; /* Azul para En Proceso */
+}
+
+.stat-item-closed .stat-number {
+    color: #28a745; /* Verde para Cerrados */
+}
+
+.stat-item-urgent .stat-number {
+    color: #dc3545; /* Rojo para Urgentes */
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .stats-horizontal {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .stat-item {
+        min-width: 100%;
+    }
+}

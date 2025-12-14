@@ -65,7 +65,7 @@ if (isset($_GET['export'])) {
         c.email,
         cat.nombre as categoria_nombre,
         u.username as agente_asignado, 
-        TIMESTAMPDIFF(HOUR, t.fecha_creacion, t.fecha_cierre) as horas_resolucion,
+        TIMESTAMPDIFF(MINUTE, t.fecha_creacion, t.fecha_cierre) as minutos_resolucion,
         es.nivel_satisfaccion,
         es.comentario as comentario_encuesta,
         es.fecha_encuesta
@@ -91,6 +91,30 @@ if (isset($_GET['export'])) {
     $export_stmt->execute($export_params);
     $tickets_export = $export_stmt->fetchAll(PDO::FETCH_ASSOC);
     
+    // Función para formatear el tiempo de resolución
+    function formatTiempoResolucion($minutos) {
+        if ($minutos === null || $minutos <= 0) {
+            return 'N/A';
+        }
+        
+        $dias = floor($minutos / (60 * 24));
+        $horas = floor(($minutos % (60 * 24)) / 60);
+        $min = $minutos % 60;
+        
+        $result = '';
+        if ($dias > 0) {
+            $result .= $dias . 'd ';
+        }
+        if ($horas > 0) {
+            $result .= $horas . 'h ';
+        }
+        if ($min > 0 || ($dias == 0 && $horas == 0)) {
+            $result .= $min . 'm';
+        }
+        
+        return trim($result);
+    }
+    
     // Encabezados del Excel incluyendo encuesta
     echo "ID\t";
     echo "Título\t";
@@ -102,7 +126,7 @@ if (isset($_GET['export'])) {
     echo "Agente\t";
     echo "Fecha Creación\t";
     echo "Fecha Cierre\t";
-    echo "Horas Resolución\t";
+    echo "Tiempo Resolución\t";
     echo "Nivel Satisfacción\t";
     echo "Comentario Encuesta\t";
     echo "Fecha Encuesta\t";
@@ -119,7 +143,7 @@ if (isset($_GET['export'])) {
         echo $ticket['agente_asignado'] . "\t";
         echo date('d/m/Y H:i', strtotime($ticket['fecha_creacion'])) . "\t";
         echo ($ticket['fecha_cierre'] ? date('d/m/Y H:i', strtotime($ticket['fecha_cierre'])) : 'N/A') . "\t";
-        echo ($ticket['horas_resolucion'] ? $ticket['horas_resolucion'] . ' horas' : 'N/A') . "\t";
+        echo formatTiempoResolucion($ticket['minutos_resolucion']) . "\t";
         echo ($ticket['nivel_satisfaccion'] ? $ticket['nivel_satisfaccion'] : 'No completada') . "\t";
         echo ($ticket['comentario_encuesta'] ? str_replace(["\r\n", "\n", "\r", "\t"], " ", $ticket['comentario_encuesta']) : 'Sin comentario') . "\t";
         echo ($ticket['fecha_encuesta'] ? date('d/m/Y H:i', strtotime($ticket['fecha_encuesta'])) : 'N/A') . "\t";
@@ -210,9 +234,21 @@ if (isset($_GET['export'])) {
                 <div class="stat-number">
                     <?php 
                     if ($estadisticas['tiempo_promedio_sec']) {
-                        $horas = floor($estadisticas['tiempo_promedio_sec'] / 3600);
+                        $dias = floor($estadisticas['tiempo_promedio_sec'] / (3600 * 24));
+                        $horas = floor(($estadisticas['tiempo_promedio_sec'] % (3600 * 24)) / 3600);
                         $minutos = floor(($estadisticas['tiempo_promedio_sec'] % 3600) / 60);
-                        echo $horas . 'h ' . $minutos . 'm';
+                        
+                        $result = '';
+                        if ($dias > 0) {
+                            $result .= $dias . 'd ';
+                        }
+                        if ($horas > 0) {
+                            $result .= $horas . 'h ';
+                        }
+                        if ($minutos > 0 || ($dias == 0 && $horas == 0)) {
+                            $result .= $minutos . 'm';
+                        }
+                        echo trim($result);
                     } else {
                         echo 'N/A';
                     }
