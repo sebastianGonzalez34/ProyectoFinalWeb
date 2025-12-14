@@ -3,8 +3,6 @@ require_once '../includes/config.php';
 require_once '../includes/database.php';
 require_once '../includes/sanitize.php';
 
-session_start();
-
 // Verificar si el usuario está logueado
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");

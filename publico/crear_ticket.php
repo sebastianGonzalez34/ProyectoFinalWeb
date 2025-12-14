@@ -85,7 +85,7 @@ $categorias = [];
 try {
     $database = new Database();
     $db = $database->getConnection();
-    $query = "SELECT id_categoria, nombre, descripcion FROM categorias_ticket ORDER BY nombre";
+    $query = "SELECT id_categoria, nombre FROM categorias_ticket ORDER BY nombre";
     $stmt = $db->query($query);
     $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch(PDOException $exception) {
@@ -114,7 +114,7 @@ $user_nombre = isset($_SESSION['user_nombre']) ? htmlspecialchars($_SESSION['use
                     <li><a href="index.php">Inicio</a></li>
                     <li><a href="mis_tickets.php">Mis Tickets</a></li>
                     <li><a href="cambiar_password.php">Cambiar Contraseña</a></li>
-                    <li><a href="logout.php" class="btn btn-logout">Cerrar Sesión</a></li>
+                    <li><a href="logout.php" class="btn-logout">Cerrar Sesión</a></li>
                 </ul>
             </nav>
         </div>
@@ -165,7 +165,7 @@ $user_nombre = isset($_SESSION['user_nombre']) ? htmlspecialchars($_SESSION['use
                 </div>
                 
                 <div class="urgent-toggle">
-                    <div class="urgent-toggle-content">
+                    <div>
                         <span class="urgent-label">¿Es urgente?</span>
                         <div class="urgent-note">
                             Los tickets urgentes tienen un tiempo de respuesta esperado de 4 horas
