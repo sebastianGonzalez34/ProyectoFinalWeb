@@ -5940,3 +5940,12 @@ label[for="segundo_apellido"]::after {
     font-size: 0.9rem;
     opacity: 0.9;
 }
+
+footer {
+    background-color: #343a40;
+    color: white;
+    text-align: center;
+    padding: 1rem 0;
+    margin-top: auto; /* Esto empuja el footer al fondo */
+    width: 100%;
+}

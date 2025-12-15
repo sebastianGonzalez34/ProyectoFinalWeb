@@ -232,27 +232,26 @@ if (isset($_GET['export'])) {
             </div>
             <div class="stat-card">
                 <div class="stat-number">
-                    <?php 
-                    if ($estadisticas['tiempo_promedio_sec']) {
-                        $dias = floor($estadisticas['tiempo_promedio_sec'] / (3600 * 24));
-                        $horas = floor(($estadisticas['tiempo_promedio_sec'] % (3600 * 24)) / 3600);
-                        $minutos = floor(($estadisticas['tiempo_promedio_sec'] % 3600) / 60);
-                        
-                        $result = '';
-                        if ($dias > 0) {
-                            $result .= $dias . 'd ';
-                        }
-                        if ($horas > 0) {
-                            $result .= $horas . 'h ';
-                        }
-                        if ($minutos > 0 || ($dias == 0 && $horas == 0)) {
-                            $result .= $minutos . 'm';
-                        }
-                        echo trim($result);
-                    } else {
-                        echo 'N/A';
-                    }
-                    ?>
+                <?php
+if (!empty($estadisticas['tiempo_promedio_sec'])) {
+
+    $tiempo_promedio_sec = (int) floor((float) $estadisticas['tiempo_promedio_sec']);
+
+    $dias = (int) floor($tiempo_promedio_sec / 86400);
+    $horas = (int) floor(($tiempo_promedio_sec % 86400) / 3600);
+    $minutos = (int) floor(($tiempo_promedio_sec % 3600) / 60);
+
+    $result = '';
+    if ($dias > 0) { $result .= $dias . 'd '; }
+    if ($horas > 0) { $result .= $horas . 'h '; }
+    $result .= $minutos . 'm';
+
+    echo trim($result);
+} else {
+    echo 'N/A';
+}
+?>
+
                 </div>
                 <div class="stat-label">Tiempo Promedio</div>
             </div>
