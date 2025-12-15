@@ -177,5 +177,6 @@ $user_nombre = isset($_SESSION['user_nombre']) ? htmlspecialchars($_SESSION['use
             </div>
         <?php endif; ?>
     </main>
+    <?php include_once '../includes/footer.php'; ?>
 </body>
 </html>

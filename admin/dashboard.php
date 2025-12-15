@@ -102,5 +102,6 @@ $tickets_recientes = $db->query("SELECT t.*, c.primer_nombre, c.primer_apellido,
             <?php endif; ?>
         </div>
     </div>
+    <?php include_once '../includes/footer.php'; ?>
 </body>
 </html>

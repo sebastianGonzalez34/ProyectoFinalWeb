@@ -318,5 +318,6 @@ if (isset($_GET['export'])) {
         </div>
         <?php endif; ?>
     </div>
+    <?php include_once '../includes/footer.php'; ?>
 </body>
 </html>

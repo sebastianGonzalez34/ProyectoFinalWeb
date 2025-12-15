@@ -5906,3 +5906,37 @@ input:checked + .toggle-slider:before {
         min-width: 100%;
     }
 }
+
+    /* Para ocultar asteriscos en estos campos específicos */
+#segundo_nombre:not(:required)::before,
+#segundo_apellido:not(:required)::before {
+        display: none !important;
+    }
+    
+    /* O si el asterisco se añade a través de las labels */
+label[for="segundo_nombre"]::after,
+label[for="segundo_apellido"]::after {
+        content: none !important;
+    }
+
+    /* Estilos del footer */
+.footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 1.5rem 0;
+    margin-top: 3rem;
+    border-top: 3px solid #0066cc;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.footer p {
+    margin: 0;
+    font-size: 0.9rem;
+    opacity: 0.9;
+}

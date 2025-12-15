@@ -190,5 +190,6 @@ if ($usuario_logueado) {
             </div>
         </div>
     </main>
+    <?php include_once '../includes/footer.php'; ?>
 </body>
 </html>

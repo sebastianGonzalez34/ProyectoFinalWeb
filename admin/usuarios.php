@@ -225,5 +225,6 @@ $total_pages = ceil($total_rows / $records_per_page);
     </div>
 
     <script src="../js/scripts.js"></script>
+    <?php include_once '../includes/footer.php'; ?>
 </body>
 </html>

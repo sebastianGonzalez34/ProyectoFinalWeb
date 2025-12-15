@@ -213,9 +213,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="form-group">
                     <label for="segundo_nombre">Segundo Nombre</label>
                     <input type="text" id="segundo_nombre" name="segundo_nombre"
-                           value="<?php echo isset($_POST['segundo_nombre']) ? htmlspecialchars($_POST['segundo_nombre']) : ''; ?>"
-                           maxlength="50">
-                </div>
+                            value="<?php echo isset($_POST['segundo_nombre']) ? htmlspecialchars($_POST['segundo_nombre']) : ''; ?>"
+                            maxlength="50">
+    </div>
             </div>
 
             <div class="form-row">
@@ -315,5 +315,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
     </div>
 </main>
+<?php include_once '../includes/footer.php'; ?>
 </body>
 </html>

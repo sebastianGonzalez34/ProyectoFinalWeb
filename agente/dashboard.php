@@ -105,5 +105,6 @@ $tickets = $tickets_recientes->fetchAll(PDO::FETCH_ASSOC);
             </div>
         </div>
     </div>
+    <?php include_once '../includes/footer.php'; ?>
 </body>
 </html>

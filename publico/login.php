@@ -106,12 +106,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <!-- SIN TIPO DE USUARIO -->
 
             <div class="form-group">
-                <label for="username">Usuario *</label>
+                <label for="username">Usuario</label>
                 <input type="text" id="username" name="username" required>
             </div>
 
             <div class="form-group">
-                <label for="password">Contraseña *</label>
+                <label for="password">Contraseña</label>
                 <input type="password" id="password" name="password" required>
             </div>
 
@@ -131,6 +131,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
 </main>
-
+<?php include_once '../includes/footer.php'; ?>
 </body>
 </html>
